@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>קבוצת רכישה ממדים — מכבים-רעות</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <style>
+    /* ============================================================
+       GLOBAL
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      direction: rtl;
+      color: #1a2340;
+      min-height: 100vh;
+
+      background: url('WhatsApp Image 2026-04-10 at 10.08.59.jpeg') center/cover no-repeat fixed;
+    }
+
+    a { color: #1565c0; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ============================================================
+       LOGIN OVERLAY
+    ============================================================ */
+    #login-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 30, 80, 0.88);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    #login-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 48px 40px 40px;
+      width: 360px;
+      max-width: 92vw;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    #login-box .lock-icon {
+      font-size: 52px;
+      margin-bottom: 12px;
+    }
+
+    #login-box h2 {
+      font-size: 1.4rem;
+      color: #0a2a6e;
+      margin-bottom: 6px;
+    }
+
+    #login-box p {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 28px;
+    }
+
+    #login-box input[type="password"] {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #c5d5ea;
+      border-radius: 10px;
+      font-size: 1rem;
+      text-align: center;
+      letter-spacing: 3px;
+      outline: none;
+      transition: border-color 0.2s;
+      direction: ltr;
+    }
+
+    #login-box input[type="password"]:focus {
+      border-color: #1a5fa8;
+    }
+
+    #login-btn {
+      margin-top: 16px;
+      width: 100%;
+      padding: 14px;
+      background: #1a5fa8;
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    #login-btn:hover { background: #0d3d78; }
+
+    #login-error {
+      margin-top: 12px;
+      color: #c62828;
+      font-size: 0.9rem;
+      min-height: 20px;
+    }
+
+    /* ============================================================
+       MAIN CONTENT
+    ============================================================ */
+    #main-content {
+      display: none;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    /* -------- HEADER -------- */
+    .site-header {
+      background: rgba(255,255,255,0.92);
+      border-radius: 20px;
+      padding: 32px 36px;
+      text-align: center;
+      margin-bottom: 28px;
+      box-shadow: 0 4px 24px rgba(10,42,110,0.13);
+    }
+
+    .site-header .flag { font-size: 2rem; margin-bottom: 8px; }
+
+    .site-header h1 {
+      font-size: 1.9rem;
+      color: #0a2a6e;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .site-header .subtitle {
+      color: #1a5fa8;
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .site-header .updated {
+      font-size: 0.82rem;
+      color: #888;
+    }
+
+    /* -------- CARDS (sections) -------- */
+    .card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(10,42,110,0.10);
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      color: #0a2a6e;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e0eaf5;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* -------- PROGRESS TRACKER -------- */
+    .progress-steps {
+      display: flex;
+      gap: 0;
+      counter-reset: step;
+    }
+
+    .step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+
+    .step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 22px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: #c5d5ea;
+      z-index: 0;
+    }
+
+    .step.done:not(:last-child)::after,
+    .step.active:not(:last-child)::after {
+      background: #1a5fa8;
+    }
+
+    .step-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      position: relative;
+      z-index: 1;
+      background: #e0eaf5;
+      border: 3px solid #c5d5ea;
+    }
+
+    .step.done .step-circle {
+      background: #e8f5e9;
+      border-color: #43a047;
+      color: #43a047;
+    }
+
+    .step.active .step-circle {
+      background: #1a5fa8;
+      border-color: #1a5fa8;
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(26,95,168,0.2);
+    }
+
+    .step-label {
+      display: block;
+      margin-top: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #666;
+      line-height: 1.3;
+    }
+
+    .step.done .step-label { color: #43a047; }
+    .step.active .step-label { color: #1a5fa8; }
+
+    .active-badge {
+      display: inline-block;
+      background: #fff3e0;
+      color: #e65100;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-top: 4px;
+    }
+
+    /* -------- MAMAD TYPE CARDS -------- */
+    .mamad-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .mamad-grid { grid-template-columns: 1fr; }
+      .progress-steps { flex-direction: column; gap: 8px; }
+      .step::after { display: none; }
+    }
+
+    .mamad-card {
+      border: 2px solid #c5d5ea;
+      border-radius: 14px;
+      padding: 22px 16px;
+      text-align: center;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .mamad-card:hover {
+      border-color: #1a5fa8;
+      box-shadow: 0 4px 16px rgba(26,95,168,0.15);
+    }
+
+    .mamad-size {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #0a2a6e;
+      line-height: 1;
+    }
+
+    .mamad-unit {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .mamad-badge {
+      display: inline-block;
+      background: #e3f2fd;
+      color: #1565c0;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* -------- TABLES -------- */
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.93rem;
+    }
+
+    table th {
+      background: #0a2a6e;
+      color: #fff;
+      padding: 11px 14px;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #e8eef5;
+      vertical-align: middle;
+    }
+
+    table tbody tr:nth-child(even) { background: #f5f8fd; }
+    table tbody tr:hover { background: #e8f0fb; }
+
+    .empty-row td {
+      text-align: center;
+      color: #aaa;
+      font-style: italic;
+      padding: 24px;
+    }
+
+    /* -------- LINKS SECTION -------- */
+    .links-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 600px) { .links-grid { grid-template-columns: 1fr; } }
+
+    .link-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 2px solid;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .link-btn.oref {
+      background: #e8f5e9;
+      border-color: #43a047;
+      color: #1b5e20;
+    }
+
+    .link-btn.oref:hover { background: #c8e6c9; }
+
+    .link-btn.pdf {
+      background: #fff3e0;
+      border-color: #fb8c00;
+      color: #e65100;
+    }
+
+    .link-btn.pdf:hover { background: #ffe0b2; }
+
+    .link-btn .icon { font-size: 1.6rem; }
+
+    .regulation-box {
+      margin-top: 18px;
+      background: #fff8e1;
+      border-right: 4px solid #ffc107;
+      border-radius: 10px;
+      padding: 16px 18px;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: #4a3500;
+    }
+
+    .regulation-box strong { color: #c62828; }
+
+    /* -------- WHATSAPP -------- */
+    .whatsapp-wrap {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    #qr-canvas {
+      border-radius: 12px;
+      border: 3px solid #c5d5ea;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    .whatsapp-text h3 {
+      font-size: 1.1rem;
+      color: #0a2a6e;
+      margin-bottom: 10px;
+    }
+
+    .whatsapp-text p {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    .wa-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #25d366;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 13px 24px;
+      border-radius: 30px;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(37,211,102,0.35);
+      transition: background 0.2s;
+    }
+
+    .wa-btn:hover { background: #1aab53; text-decoration: none; }
+
+    /* -------- STICKY NAV -------- */
+    #top-nav {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 30, 80, 0.96);
+      backdrop-filter: blur(8px);
+      padding: 10px 20px;
+      margin-bottom: 20px;
+      border-radius: 0 0 14px 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+
+    #top-nav .nav-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    #top-nav .nav-title {
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    #top-nav .nav-links {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    #top-nav .nav-links a {
+      color: rgba(255,255,255,0.85);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.1);
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    #top-nav .nav-links a:hover {
+      background: rgba(255,255,255,0.22);
+      text-decoration: none;
+    }
+
+    #logout-btn {
+      background: rgba(198,40,40,0.75);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    #logout-btn:hover { background: rgba(198,40,40,1); }
+
+    /* -------- SCROLL TO TOP -------- */
+    #scroll-top {
+      display: none;
+      position: fixed;
+      bottom: 28px;
+      left: 28px;
+      width: 44px;
+      height: 44px;
+      background: #1a5fa8;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.3rem;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(10,42,110,0.35);
+      z-index: 200;
+      transition: background 0.2s, opacity 0.3s;
+    }
+
+    #scroll-top:hover { background: #0d3d78; }
+
+    /* -------- FOOTER -------- */
+    .footer {
+      text-align: center;
+      margin-top: 36px;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.7);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       LOGIN OVERLAY
+  ============================================================ -->
+  <div id="login-overlay">
+    <div id="login-box">
+      <div class="lock-icon">🔒</div>
+      <h2>קבוצת רכישה ממדים</h2>
+      <p>מכבים-רעות — גישה לחברי הקבוצה בלבד</p>
+      <input type="password" id="password-input" placeholder="הזן סיסמה" autocomplete="off" />
+      <button id="login-btn" onclick="doLogin()">כניסה</button>
+      <div id="login-error"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       STICKY NAV (shown after login)
+  ============================================================ -->
+  <nav id="top-nav">
+    <div class="nav-inner">
+      <span class="nav-title">🛡️ ממדים מכבים-רעות</span>
+      <div class="nav-links">
+        <a href="#sec-status">שלב התהליך</a>
+        <a href="#sec-types">סוגי ממד</a>
+        <a href="#sec-vendors">ספקים</a>
+        <a href="#sec-families">בתי אב</a>
+        <a href="#sec-oref">פיקוד העורף</a>
+        <a href="#sec-wa">ווצאפ</a>
+      </div>
+      <button id="logout-btn" onclick="doLogout()">יציאה ↩</button>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       MAIN CONTENT
+  ============================================================ -->
+  <div id="main-content">
+
+    <!-- HEADER -->
+    <div class="site-header">
+      <div class="flag">🏠🛡️</div>
+      <h1>קבוצת רכישה ממדים</h1>
+      <div class="subtitle">שכונות מכבים-רעות</div>
+      <div class="updated" id="updated-date"></div>
+    </div>
+
+    <!-- PROGRESS TRACKER -->
+    <div class="card" id="sec-status">
+      <h2>📊 שלב התהליך</h2>
+      <div class="progress-steps">
+        <div class="step done">
+          <div class="step-circle">✅</div>
+          <span class="step-label">איסוף<br>מתעניינים</span>
+        </div>
+        <div class="step active">
+          <div class="step-circle">📞</div>
+          <span class="step-label">פנייה<br>לספקים</span>
+          <span class="active-badge">שלב נוכחי</span>
+        </div>
+        <div class="step">
+          <div class="step-circle">⚖️</div>
+          <span class="step-label">השוואת<br>הצעות</span>
+        </div>
+        <div class="step">
+          <div class="step-circle">✍️</div>
+          <span class="step-label">בחירה<br>וחתימה</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAMAD TYPES -->
+    <div class="card" id="sec-types">
+      <h2>🏗️ סוגי הממד — אפשרויות</h2>
+      <div class="mamad-grid">
+        <div class="mamad-card">
+          <div class="mamad-size">5</div>
+          <div class="mamad-unit">מ"ר</div>
+          <div class="mamad-badge">כולל מבואה</div>
+        </div>
+        <div class="mamad-card">
+          <div class="mamad-size">9</div>
+          <div class="mamad-unit">מ"ר</div>
+          <div class="mamad-badge">ממד סטנדרטי</div>
+        </div>
+        <div class="mamad-card">
+          <div class="mamad-size">12</div>
+          <div class="mamad-unit">מ"ר</div>
+          <div class="mamad-badge">כולל שירותים</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VENDORS TABLE -->
+    <div class="card" id="sec-vendors">
+      <h2>💰 ספקים ומחירים מוצעים</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>שם חברה</th>
+              <th>ממד 5 מ"ר</th>
+              <th>ממד 9 מ"ר</th>
+              <th>ממד 12 מ"ר</th>
+              <th>תוקף אישור</th>
+              <th>הערות</th>
+            </tr>
+          </thead>
+          <tbody id="vendors-tbody">
+            <!-- להוסיף שורות כאן לפי הדוגמה:
+            <tr>
+              <td>שם החברה</td>
+              <td>₪ 00,000</td>
+              <td>₪ 00,000</td>
+              <td>₪ 00,000</td>
+              <td>01/2027</td>
+              <td>—</td>
+            </tr>
+            -->
+            <tr class="empty-row">
+              <td colspan="6">⏳ ממתינים להצעות ספקים — הטבלה תתעדכן בקרוב</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FAMILIES TABLE -->
+    <div class="card" id="sec-families">
+      <h2>👨‍👩‍👧 בתי אב המעוניינים</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>שם משפחה</th>
+              <th>כתובת</th>
+              <th>גודל מועדף</th>
+              <th>תאריך הצטרפות</th>
+            </tr>
+          </thead>
+          <tbody id="families-tbody">
+            <!-- להוסיף שורות כאן לפי הדוגמה:
+            <tr>
+              <td>1</td>
+              <td>משפחת ישראלי</td>
+              <td>רחוב הרצל 5</td>
+              <td>9 מ"ר</td>
+              <td>אפריל 2026</td>
+            </tr>
+            -->
+            <tr class="empty-row">
+              <td colspan="5">📝 הרשימה תתמלא בהתאם למתעניינים שיצרו קשר</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- HOME FRONT COMMAND / LEGAL INFO -->
+    <div class="card" id="sec-oref">
+      <h2>📋 מידע רגולטורי — פיקוד העורף</h2>
+      <div class="links-grid">
+        <a class="link-btn oref" href="https://www.oref.org.il" target="_blank" rel="noopener">
+          <span class="icon">🛡️</span>
+          <span>אתר פיקוד העורף<br><small style="font-weight:400">oref.org.il</small></span>
+        </a>
+        <a class="link-btn pdf" href="חברות-מאושרות.pdf" target="_blank">
+          <span class="icon">📄</span>
+          <span>רשימת חברות מאושרות<br><small style="font-weight:400">מסמך רשמי — פברואר 2026</small></span>
+        </a>
+      </div>
+
+      <div class="regulation-box">
+        <strong>⚠️ הוראת השעה — ממד יביל ללא היתר בניה</strong><br><br>
+        בהתאם לתיקון לחוק ההתגוננות האזרחית, קיימת <strong>הוראת שעה</strong> המאפשרת להציב מרחב מוגן יביל (ממד) ללא צורך בהיתר בניה רגיל — בתנאי שהוא מאושר על ידי פיקוד העורף.<br><br>
+        הוראת השעה בתוקף <strong>עד אוקטובר 2026</strong>. מומלץ לסיים את ההתקנה בתוך תקופת תוקף זו.<br><br>
+        חשוב: יש לוודא שהחברה הנבחרת מופיעה ברשימת החברות המאושרות של פיקוד העורף (ראה קישור לעיל).
+      </div>
+    </div>
+
+    <!-- WHATSAPP -->
+    <div class="card" id="sec-wa">
+      <h2>📱 הצטרפות לקבוצת הווצאפ</h2>
+      <div class="whatsapp-wrap">
+        <canvas id="qr-canvas"></canvas>
+        <div class="whatsapp-text">
+          <h3>טרם הצטרפת? הצטרף לקבוצת הווצאפ של הדיירים</h3>
+          <p>
+            בקבוצה נשתף עדכונים שוטפים, תאריכי פגישות, הצעות מחיר ושאלות.<br>
+            סרוק את הקוד עם הטלפון, או לחץ על הכפתור למטה.
+          </p>
+          <a class="wa-btn"
+             href="https://chat.whatsapp.com/Lw9FYjc1eAS9mAIGppURo8?mode=gi_t"
+             target="_blank" rel="noopener">
+            <svg width="22" height="22" viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 2C8.268 2 2 8.268 2 16c0 2.52.665 4.883 1.827 6.932L2 30l7.302-1.8A13.942 13.942 0 0016 30c7.732 0 14-6.268 14-14S23.732 2 16 2zm0 25.5a11.44 11.44 0 01-5.83-1.6l-.42-.25-4.33 1.07 1.1-4.22-.27-.43A11.5 11.5 0 1116 27.5zm6.3-8.6c-.35-.17-2.06-1.01-2.38-1.13-.32-.11-.55-.17-.78.17-.23.35-.88 1.13-1.08 1.36-.2.23-.4.26-.74.09-.35-.17-1.47-.54-2.8-1.72-1.03-.92-1.73-2.06-1.93-2.4-.2-.35-.02-.54.15-.71.16-.16.35-.4.52-.6.17-.2.23-.35.35-.58.12-.23.06-.43-.03-.6-.09-.17-.78-1.87-1.06-2.56-.28-.67-.56-.58-.78-.59h-.66c-.23 0-.6.09-.91.43-.31.35-1.2 1.17-1.2 2.86 0 1.69 1.22 3.32 1.39 3.55.17.23 2.4 3.67 5.82 5.14.81.35 1.44.56 1.93.71.81.26 1.55.22 2.13.13.65-.1 2.01-.82 2.3-1.62.28-.8.28-1.48.2-1.62-.09-.14-.32-.23-.67-.4z"/>
+            </svg>
+            הצטרפות לקבוצה
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      אתר זה מיועד לחברי קבוצת הרכישה בלבד — מכבים-רעות &nbsp;|&nbsp; כל הזכויות שמורות
+    </div>
+
+  </div><!-- /main-content -->
+
+  <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="חזרה לראש הדף">↑</button>
+
+  <script>
+    /* ============================================================
+       CONFIGURATION — שנה את הסיסמה כאן
+    ============================================================ */
+    const SITE_PASSWORD = "Mamad2026";
+
+    /* ============================================================
+       LOGIN LOGIC
+    ============================================================ */
+    function doLogin() {
+      const input = document.getElementById('password-input').value;
+      if (input === SITE_PASSWORD) {
+        sessionStorage.setItem('mamad_auth', '1');
+        showSite();
+      } else {
+        const err = document.getElementById('login-error');
+        err.textContent = '❌ סיסמה שגויה. נסה שוב.';
+        document.getElementById('password-input').value = '';
+        document.getElementById('password-input').focus();
+        setTimeout(() => { err.textContent = ''; }, 3000);
+      }
+    }
+
+    function showSite() {
+      document.getElementById('login-overlay').style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
+      document.getElementById('top-nav').style.display = 'block';
+      generateQR();
+    }
+
+    function doLogout() {
+      sessionStorage.removeItem('mamad_auth');
+      document.getElementById('main-content').style.display = 'none';
+      document.getElementById('top-nav').style.display = 'none';
+      document.getElementById('login-overlay').style.display = 'flex';
+      document.getElementById('password-input').value = '';
+      document.getElementById('scroll-top').style.display = 'none';
+      window.scrollTo({top: 0, behavior: 'instant'});
+    }
+
+    // Allow Enter key on password field
+    document.getElementById('password-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') doLogin();
+    });
+
+    // Scroll-to-top button visibility
+    window.addEventListener('scroll', function() {
+      const btn = document.getElementById('scroll-top');
+      if (sessionStorage.getItem('mamad_auth') === '1') {
+        btn.style.display = window.scrollY > 300 ? 'block' : 'none';
+      }
+    });
+
+    // Smooth scroll for nav links
+    document.querySelectorAll('#top-nav a[href^="#"]').forEach(function(a) {
+      a.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // Auto-login if already authenticated this session
+    if (sessionStorage.getItem('mamad_auth') === '1') {
+      showSite();
+    }
+
+    /* ============================================================
+       LAST UPDATED DATE
+    ============================================================ */
+    (function() {
+      const months = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני',
+                      'יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+      const d = new Date();
+      document.getElementById('updated-date').textContent =
+        'עודכן לאחרונה: ' + d.getDate() + ' ב' + months[d.getMonth()] + ' ' + d.getFullYear();
+    })();
+
+    /* ============================================================
+       QR CODE GENERATION
+    ============================================================ */
+    function generateQR() {
+      const canvas = document.getElementById('qr-canvas');
+      QRCode.toCanvas(canvas, 'https://chat.whatsapp.com/Lw9FYjc1eAS9mAIGppURo8?mode=gi_t', {
+        width: 160,
+        margin: 2,
+        color: { dark: '#0a2a6e', light: '#ffffff' }
+      }, function(err) {
+        if (err) console.error('QR error:', err);
+      });
+    }
+  </script>
+</body>
+</html>
