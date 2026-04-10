@@ -424,6 +424,138 @@
 
     .wa-btn:hover { background: #1aab53; text-decoration: none; }
 
+    /* -------- SURVEY -------- */
+    .survey-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .survey-options { grid-template-columns: 1fr; }
+    }
+
+    .survey-opt {
+      cursor: pointer;
+      display: block;
+    }
+
+    .survey-opt input[type="radio"] {
+      display: none;
+    }
+
+    .survey-opt-inner {
+      border: 2px solid #c5d5ea;
+      border-radius: 14px;
+      padding: 22px 16px;
+      text-align: center;
+      transition: all 0.18s;
+      background: #f8fafd;
+      user-select: none;
+    }
+
+    .survey-opt:hover .survey-opt-inner {
+      border-color: #1a5fa8;
+      background: #eef4fb;
+    }
+
+    .survey-opt input:checked + .survey-opt-inner {
+      border-color: #1a5fa8;
+      background: #e3f0fb;
+      box-shadow: 0 0 0 3px rgba(26,95,168,0.18);
+    }
+
+    .survey-size {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #0a2a6e;
+      line-height: 1;
+    }
+
+    .survey-size span {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .survey-desc {
+      font-size: 0.82rem;
+      color: #666;
+      margin-top: 6px;
+    }
+
+    #survey-submit {
+      margin-top: 20px;
+      padding: 13px 36px;
+      background: #1a5fa8;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: block;
+      width: 100%;
+    }
+
+    #survey-submit:hover { background: #0d3d78; }
+    #survey-submit:disabled { background: #aaa; cursor: not-allowed; }
+
+    /* -------- LICENSING STEPS -------- */
+    .license-alert {
+      background: #fff3e0;
+      border-right: 4px solid #ff6f00;
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: #4a2800;
+      margin-bottom: 24px;
+    }
+
+    .license-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .lic-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      padding: 16px 0;
+      border-bottom: 1px solid #e8eef5;
+    }
+
+    .lic-num {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #0a2a6e;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .lic-title {
+      font-weight: 700;
+      color: #0a2a6e;
+      font-size: 0.97rem;
+      margin-bottom: 4px;
+    }
+
+    .lic-desc {
+      font-size: 0.87rem;
+      color: #555;
+      line-height: 1.65;
+    }
+
     /* -------- STICKY NAV -------- */
     #top-nav {
       display: none;
@@ -550,6 +682,7 @@
         <a href="#sec-vendors">ספקים</a>
         <a href="#sec-families">בתי אב</a>
         <a href="#sec-oref">פיקוד העורף</a>
+        <a href="#sec-license">רישוי</a>
         <a href="#sec-wa">ווצאפ</a>
       </div>
       <button id="logout-btn" onclick="doLogout()">יציאה ↩</button>
@@ -649,35 +782,59 @@
       </div>
     </div>
 
-    <!-- FAMILIES TABLE -->
+    <!-- SURVEY -->
     <div class="card" id="sec-families">
-      <h2>👨‍👩‍👧 בתי אב המעוניינים</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>שם משפחה</th>
-              <th>כתובת</th>
-              <th>גודל מועדף</th>
-              <th>תאריך הצטרפות</th>
-            </tr>
-          </thead>
-          <tbody id="families-tbody">
-            <!-- להוסיף שורות כאן לפי הדוגמה:
-            <tr>
-              <td>1</td>
-              <td>משפחת ישראלי</td>
-              <td>רחוב הרצל 5</td>
-              <td>9 מ"ר</td>
-              <td>אפריל 2026</td>
-            </tr>
-            -->
-            <tr class="empty-row">
-              <td colspan="5">📝 הרשימה תתמלא בהתאם למתעניינים שיצרו קשר</td>
-            </tr>
-          </tbody>
-        </table>
+      <h2>📋 סקר העדפות — סוג הממד</h2>
+
+      <!-- ALREADY VOTED STATE -->
+      <div id="survey-done" style="display:none; text-align:center; padding:28px 0;">
+        <div style="font-size:3rem; margin-bottom:12px;">✅</div>
+        <div style="font-size:1.15rem; font-weight:700; color:#1b5e20; margin-bottom:8px;">תודה! תשובתך נרשמה.</div>
+        <div style="font-size:0.9rem; color:#555;">כבר השתתפת בסקר ממכשיר זה.</div>
+      </div>
+
+      <!-- SURVEY FORM -->
+      <div id="survey-form">
+        <p style="color:#555; font-size:0.93rem; margin-bottom:6px; line-height:1.7;">
+          בחר/י את גודל הממד שלדעתך יתאים לצרכי המשפחה שלך.
+        </p>
+        <p style="color:#888; font-size:0.82rem; margin-bottom:22px; font-style:italic;">
+          * כפוף גם להחלטת המהנדס בהתאם לתנאי השטח.
+        </p>
+
+        <div class="survey-options">
+          <label class="survey-opt" data-size="5">
+            <input type="radio" name="mamad_size" value="5 מ&quot;ר" />
+            <div class="survey-opt-inner">
+              <div class="survey-size">5 <span>מ"ר</span></div>
+              <div class="survey-desc">כולל מבואה</div>
+            </div>
+          </label>
+          <label class="survey-opt" data-size="9">
+            <input type="radio" name="mamad_size" value="9 מ&quot;ר" />
+            <div class="survey-opt-inner">
+              <div class="survey-size">9 <span>מ"ר</span></div>
+              <div class="survey-desc">ממד סטנדרטי</div>
+            </div>
+          </label>
+          <label class="survey-opt" data-size="12">
+            <input type="radio" name="mamad_size" value="12 מ&quot;ר" />
+            <div class="survey-opt-inner">
+              <div class="survey-size">12 <span>מ"ר</span></div>
+              <div class="survey-desc">כולל שירותים</div>
+            </div>
+          </label>
+        </div>
+
+        <div id="survey-error" style="color:#c62828; font-size:0.88rem; margin-top:12px; min-height:18px;"></div>
+
+        <button id="survey-submit" onclick="submitSurvey()">
+          שלח תשובה ←
+        </button>
+
+        <div id="survey-sending" style="display:none; margin-top:16px; color:#1a5fa8; font-size:0.9rem; text-align:center;">
+          שולח... ⏳
+        </div>
       </div>
     </div>
 
@@ -700,6 +857,68 @@
         בהתאם לתיקון לחוק ההתגוננות האזרחית, קיימת <strong>הוראת שעה</strong> המאפשרת להציב מרחב מוגן יביל (ממד) ללא צורך בהיתר בניה רגיל — בתנאי שהוא מאושר על ידי פיקוד העורף.<br><br>
         הוראת השעה בתוקף <strong>עד אוקטובר 2026</strong>. מומלץ לסיים את ההתקנה בתוך תקופת תוקף זו.<br><br>
         חשוב: יש לוודא שהחברה הנבחרת מופיעה ברשימת החברות המאושרות של פיקוד העורף (ראה קישור לעיל).
+      </div>
+    </div>
+
+    <!-- LICENSING PROCESS -->
+    <div class="card" id="sec-license">
+      <h2>📝 תהליך הרישוי — מסלול מהיר (פטור מהיתר)</h2>
+
+      <div class="license-alert">
+        ⏰ <strong>תקף עד 25.10.2026</strong> — לבתים צמודי קרקע ומבנים עד שתי קומות בלבד.<br>
+        במסלול זה אין צורך בהחלטת ועדה מקומית ואין פרסום להקלות — התהליך מהיר ופחות חשוף להתנגדויות.
+      </div>
+
+      <div class="license-steps">
+
+        <div class="lic-step">
+          <div class="lic-num">1</div>
+          <div class="lic-body">
+            <div class="lic-title">מינוי עורך בקשה</div>
+            <div class="lic-desc">אדריכל / מהנדס / הנדסאי בניין עם ניסיון בממ"דים. הוא אחראי לתכנון ולתקשורת מול פיקוד העורף.</div>
+          </div>
+        </div>
+
+        <div class="lic-step">
+          <div class="lic-num">2</div>
+          <div class="lic-body">
+            <div class="lic-title">תכנון הממ"ד לפי תקן</div>
+            <div class="lic-desc">בחירת מיקום (חיצוני / פנימי), דגם ממ"ד סטנדרטי, פתחים, דלת וחלון תקניים, קונסטרוקציה ואוורור.</div>
+          </div>
+        </div>
+
+        <div class="lic-step">
+          <div class="lic-num">3</div>
+          <div class="lic-body">
+            <div class="lic-title">הגשת בקשה במערכת המקוונת של פיקוד העורף</div>
+            <div class="lic-desc">עורך הבקשה מגיש דרך מערכת הרישוי של פיקוד העורף (לא דרך הוועדה המקומית) — תוכניות, חתך, פרטים סטטיים וטפסים לפי תקנה 30ג.</div>
+          </div>
+        </div>
+
+        <div class="lic-step">
+          <div class="lic-num">4</div>
+          <div class="lic-body">
+            <div class="lic-title">קבלת אישור פיקוד העורף</div>
+            <div class="lic-desc">לאחר בדיקה הנדסית מתקבל אישור לביצוע במסלול פטור מהיתר — בתנאי שעומד בכל הדרישות.</div>
+          </div>
+        </div>
+
+        <div class="lic-step">
+          <div class="lic-num">5</div>
+          <div class="lic-body">
+            <div class="lic-title">ביצוע הבנייה</div>
+            <div class="lic-desc">לפי התכנון המאושר ובפיקוח מהנדס קונסטרוקטור.</div>
+          </div>
+        </div>
+
+        <div class="lic-step" style="border-bottom: none;">
+          <div class="lic-num">6</div>
+          <div class="lic-body">
+            <div class="lic-title">דיווח לאחר סיום</div>
+            <div class="lic-desc">בתוך <strong>45 ימים</strong> מסיום העבודות — עורך הבקשה מעדכן את רשות הרישוי ואת פיקוד העורף ומגיש מסמכי ביצוע לפי תקנה 30ד.</div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -762,6 +981,7 @@
       document.getElementById('main-content').style.display = 'block';
       document.getElementById('top-nav').style.display = 'block';
       generateQR();
+      initSurvey();
     }
 
     function doLogout() {
@@ -811,6 +1031,65 @@
       document.getElementById('updated-date').textContent =
         'עודכן לאחרונה: ' + d.getDate() + ' ב' + months[d.getMonth()] + ' ' + d.getFullYear();
     })();
+
+    /* ============================================================
+       SURVEY
+    ============================================================ */
+    // Google Forms action URL — החלף את XXXXXXXXX במזהה הטופס שלך
+    // ואת entry.XXXXXXXXX במזהה השדה
+    const FORMS_ACTION = "https://docs.google.com/forms/d/e/XXXXXXXXX/formResponse";
+    const FORMS_ENTRY  = "entry.XXXXXXXXX";
+
+    const VOTED_KEY = 'mamad_survey_voted';
+
+    function initSurvey() {
+      if (localStorage.getItem(VOTED_KEY)) {
+        document.getElementById('survey-form').style.display = 'none';
+        document.getElementById('survey-done').style.display = 'block';
+      }
+    }
+
+    function submitSurvey() {
+      const selected = document.querySelector('input[name="mamad_size"]:checked');
+      if (!selected) {
+        document.getElementById('survey-error').textContent = '⚠️ יש לבחור גודל ממד לפני השליחה.';
+        return;
+      }
+      document.getElementById('survey-error').textContent = '';
+      document.getElementById('survey-submit').disabled = true;
+      document.getElementById('survey-sending').style.display = 'block';
+
+      // שליחה ל-Google Forms דרך iframe נסתר (עוקף CORS)
+      const iframe = document.createElement('iframe');
+      iframe.name = 'hidden_iframe';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+
+      const form = document.createElement('form');
+      form.action = FORMS_ACTION;
+      form.method = 'POST';
+      form.target = 'hidden_iframe';
+
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = FORMS_ENTRY;
+      input.value = selected.value;
+      form.appendChild(input);
+
+      document.body.appendChild(form);
+      form.submit();
+
+      // סמן כהצביע ב-localStorage (מניעת כפל)
+      localStorage.setItem(VOTED_KEY, '1');
+
+      setTimeout(function() {
+        document.getElementById('survey-form').style.display = 'none';
+        document.getElementById('survey-sending').style.display = 'none';
+        document.getElementById('survey-done').style.display = 'block';
+        form.remove();
+        iframe.remove();
+      }, 1200);
+    }
 
     /* ============================================================
        QR CODE GENERATION
