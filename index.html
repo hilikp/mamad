@@ -108,7 +108,7 @@
        MAIN CONTENT
     ============================================================ */
     #main-content {
-      display: none;
+      display: block;
       max-width: 900px;
       margin: 0 auto;
       padding: 32px 20px 60px;
@@ -566,7 +566,7 @@
 
     /* -------- STICKY NAV -------- */
     #top-nav {
-      display: none;
+      display: block;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -665,21 +665,7 @@
 <body>
 
   <!-- ============================================================
-       LOGIN OVERLAY
-  ============================================================ -->
-  <div id="login-overlay">
-    <div id="login-box">
-      <div class="lock-icon">🔒</div>
-      <h2>קבוצת רכישה ממדים</h2>
-      <p>מכבים-רעות — גישה לחברי הקבוצה בלבד</p>
-      <input type="password" id="password-input" placeholder="הזן סיסמה" autocomplete="off" />
-      <button id="login-btn" onclick="doLogin()">כניסה</button>
-      <div id="login-error"></div>
-    </div>
-  </div>
-
-  <!-- ============================================================
-       STICKY NAV (shown after login)
+       STICKY NAV
   ============================================================ -->
   <nav id="top-nav">
     <div class="nav-inner">
@@ -693,7 +679,6 @@
         <a href="#sec-license">רישוי</a>
         <a href="#sec-wa">ווצאפ</a>
       </div>
-      <button id="logout-btn" onclick="doLogout()">יציאה ↩</button>
     </div>
   </nav>
 
@@ -967,56 +952,11 @@
 
   <script>
     /* ============================================================
-       CONFIGURATION — שנה את הסיסמה כאן
+       SCROLL TO TOP
     ============================================================ */
-    const SITE_PASSWORD = "Mamad2026";
-
-    /* ============================================================
-       LOGIN LOGIC
-    ============================================================ */
-    function doLogin() {
-      const input = document.getElementById('password-input').value;
-      if (input === SITE_PASSWORD) {
-        sessionStorage.setItem('mamad_auth', '1');
-        showSite();
-      } else {
-        const err = document.getElementById('login-error');
-        err.textContent = '❌ סיסמה שגויה. נסה שוב.';
-        document.getElementById('password-input').value = '';
-        document.getElementById('password-input').focus();
-        setTimeout(() => { err.textContent = ''; }, 3000);
-      }
-    }
-
-    function showSite() {
-      document.getElementById('login-overlay').style.display = 'none';
-      document.getElementById('main-content').style.display = 'block';
-      document.getElementById('top-nav').style.display = 'block';
-      generateQR();
-      initSurvey();
-    }
-
-    function doLogout() {
-      sessionStorage.removeItem('mamad_auth');
-      document.getElementById('main-content').style.display = 'none';
-      document.getElementById('top-nav').style.display = 'none';
-      document.getElementById('login-overlay').style.display = 'flex';
-      document.getElementById('password-input').value = '';
-      document.getElementById('scroll-top').style.display = 'none';
-      window.scrollTo({top: 0, behavior: 'instant'});
-    }
-
-    // Allow Enter key on password field
-    document.getElementById('password-input').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') doLogin();
-    });
-
-    // Scroll-to-top button visibility
     window.addEventListener('scroll', function() {
-      const btn = document.getElementById('scroll-top');
-      if (sessionStorage.getItem('mamad_auth') === '1') {
-        btn.style.display = window.scrollY > 300 ? 'block' : 'none';
-      }
+      document.getElementById('scroll-top').style.display =
+        window.scrollY > 300 ? 'block' : 'none';
     });
 
     // Smooth scroll for nav links
@@ -1027,11 +967,6 @@
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
-
-    // Auto-login if already authenticated this session
-    if (sessionStorage.getItem('mamad_auth') === '1') {
-      showSite();
-    }
 
     /* ============================================================
        LAST UPDATED DATE
@@ -1047,19 +982,17 @@
     /* ============================================================
        SURVEY
     ============================================================ */
-    // Google Forms action URL — החלף את XXXXXXXXX במזהה הטופס שלך
-    // ואת entry.XXXXXXXXX במזהה השדה
     const FORMS_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSdqGL7AxhW5cxx8JDA15GqaTKU1FECePMAKwDUiVpPpvJ9nDw/formResponse";
     const FORMS_ENTRY  = "entry.295753069";
+    const VOTED_KEY    = 'mamad_survey_voted';
 
-    const VOTED_KEY = 'mamad_survey_voted';
-
-    function initSurvey() {
+    // הצג מסך "כבר הצבעת" אם כבר השתתף מהדפדפן הזה
+    (function initSurvey() {
       if (localStorage.getItem(VOTED_KEY)) {
         document.getElementById('survey-form').style.display = 'none';
-        document.getElementById('survey-done').style.display = 'block';
+        document.getElementById('survey-done').style.display  = 'block';
       }
-    }
+    })();
 
     function submitSurvey() {
       const selected = document.querySelector('input[name="mamad_size"]:checked');
@@ -1071,42 +1004,23 @@
       document.getElementById('survey-submit').disabled = true;
       document.getElementById('survey-sending').style.display = 'block';
 
-      // שליחה ל-Google Forms דרך iframe נסתר (עוקף CORS)
-      const iframe = document.createElement('iframe');
-      iframe.name = 'hidden_iframe';
-      iframe.style.display = 'none';
-      document.body.appendChild(iframe);
+      // שליחה ב-fetch עם no-cors — עובד ללא שרת, ללא CORS errors
+      var formData = new FormData();
+      formData.append(FORMS_ENTRY, selected.value);
 
-      const form = document.createElement('form');
-      form.action = FORMS_ACTION;
-      form.method = 'POST';
-      form.target = 'hidden_iframe';
-
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = FORMS_ENTRY;
-      input.value = selected.value;
-      form.appendChild(input);
-
-      document.body.appendChild(form);
-      form.submit();
-
-      // סמן כהצביע ב-localStorage (מניעת כפל)
-      localStorage.setItem(VOTED_KEY, '1');
-
-      setTimeout(function() {
-        document.getElementById('survey-form').style.display = 'none';
-        document.getElementById('survey-sending').style.display = 'none';
-        document.getElementById('survey-done').style.display = 'block';
-        form.remove();
-        iframe.remove();
-      }, 1200);
+      fetch(FORMS_ACTION, { method: 'POST', mode: 'no-cors', body: formData })
+        .finally(function() {
+          localStorage.setItem(VOTED_KEY, '1');
+          document.getElementById('survey-form').style.display    = 'none';
+          document.getElementById('survey-sending').style.display = 'none';
+          document.getElementById('survey-done').style.display    = 'block';
+        });
     }
 
     /* ============================================================
        QR CODE GENERATION
     ============================================================ */
-    function generateQR() {
+    (function generateQR() {
       const canvas = document.getElementById('qr-canvas');
       QRCode.toCanvas(canvas, 'https://chat.whatsapp.com/Lw9FYjc1eAS9mAIGppURo8?mode=gi_t', {
         width: 160,
@@ -1115,7 +1029,7 @@
       }, function(err) {
         if (err) console.error('QR error:', err);
       });
-    }
+    })();
   </script>
 </body>
 </html>
