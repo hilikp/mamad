@@ -670,6 +670,31 @@
     #survey-submit:hover { background: #0d3d78; }
     #survey-submit:disabled { background: #aaa; cursor: not-allowed; }
 
+    .survey-voted-msg {
+      text-align: center;
+      font-size: 0.95rem;
+      color: #1b5e20;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .survey-opt-readonly {
+      display: block;
+      cursor: default;
+      opacity: 0.35;
+      transition: opacity 0.2s;
+    }
+
+    .survey-opt-readonly.chosen .survey-opt-inner {
+      border-color: #1a5fa8;
+      background: #e3f0fb;
+      box-shadow: 0 0 0 3px rgba(26,95,168,0.2);
+    }
+
+    .survey-opt-readonly.chosen {
+      opacity: 1;
+    }
+
     /* -------- LICENSING STEPS -------- */
     .license-alert {
       background: #fff3e0;
@@ -993,10 +1018,28 @@
       <h2>📋 סקר העדפות — סוג הממד</h2>
 
       <!-- ALREADY VOTED STATE -->
-      <div id="survey-done" style="display:none; text-align:center; padding:28px 0;">
-        <div style="font-size:3rem; margin-bottom:12px;">✅</div>
-        <div style="font-size:1.15rem; font-weight:700; color:#1b5e20; margin-bottom:8px;">תודה! תשובתך נרשמה.</div>
-        <div style="font-size:0.9rem; color:#555;">כבר השתתפת בסקר ממכשיר זה.</div>
+      <div id="survey-done" style="display:none;">
+        <div class="survey-voted-msg">✅ תשובתך נרשמה — תודה על ההשתתפות!</div>
+        <div class="survey-options">
+          <div class="survey-opt-readonly" data-val="ממד 5 מ&quot;ר כולל מבואה (בעיקר ברעות)">
+            <div class="survey-opt-inner">
+              <div class="survey-size">5 <span>מ"ר</span></div>
+              <div class="survey-desc">כולל מבואה</div>
+            </div>
+          </div>
+          <div class="survey-opt-readonly" data-val="ממ&quot;ד 9 מ&quot;ר">
+            <div class="survey-opt-inner">
+              <div class="survey-size">9 <span>מ"ר</span></div>
+              <div class="survey-desc">ממד סטנדרטי</div>
+            </div>
+          </div>
+          <div class="survey-opt-readonly" data-val="ממ&quot;ד 12 מ&quot;ר כולל שירותים/מקלחת">
+            <div class="survey-opt-inner">
+              <div class="survey-size">12 <span>מ"ר</span></div>
+              <div class="survey-desc">כולל שירותים</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- SURVEY FORM -->
@@ -1227,16 +1270,27 @@
     /* ============================================================
        SURVEY
     ============================================================ */
-    const FORMS_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSdqGL7AxhW5cxx8JDA15GqaTKU1FECePMAKwDUiVpPpvJ9nDw/formResponse";
-    const FORMS_ENTRY  = "entry.295753069";
-    const VOTED_KEY    = 'mamad_survey_voted';
+    const FORMS_ACTION  = "https://docs.google.com/forms/d/e/1FAIpQLSdqGL7AxhW5cxx8JDA15GqaTKU1FECePMAKwDUiVpPpvJ9nDw/formResponse";
+    const FORMS_ENTRY   = "entry.295753069";
+    const VOTED_KEY     = 'mamad_survey_voted';
+    const VOTED_CHOICE  = 'mamad_survey_choice';
 
-    // הצג מסך "כבר הצבעת" אם כבר השתתף מהדפדפן הזה
+    function showReadonly() {
+      document.getElementById('survey-form').style.display = 'none';
+      document.getElementById('survey-done').style.display = 'block';
+      const choice = localStorage.getItem(VOTED_CHOICE);
+      document.querySelectorAll('.survey-opt-readonly').forEach(function(el) {
+        if (choice && el.dataset.val === choice) {
+          el.classList.add('chosen');
+        } else if (!choice) {
+          el.style.opacity = '1'; // אין מידע — מציג הכל שווה
+        }
+      });
+    }
+
+    // הצג readonly אם כבר השתתף מהדפדפן הזה
     (function initSurvey() {
-      if (localStorage.getItem(VOTED_KEY)) {
-        document.getElementById('survey-form').style.display = 'none';
-        document.getElementById('survey-done').style.display  = 'block';
-      }
+      if (localStorage.getItem(VOTED_KEY)) showReadonly();
     })();
 
     function submitSurvey() {
@@ -1256,9 +1310,9 @@
       fetch(FORMS_ACTION, { method: 'POST', mode: 'no-cors', body: formData })
         .finally(function() {
           localStorage.setItem(VOTED_KEY, '1');
-          document.getElementById('survey-form').style.display    = 'none';
+          localStorage.setItem(VOTED_CHOICE, selected.value);
           document.getElementById('survey-sending').style.display = 'none';
-          document.getElementById('survey-done').style.display    = 'block';
+          showReadonly();
         });
     }
 
