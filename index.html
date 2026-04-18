@@ -639,13 +639,13 @@
     /* -------- SURVEY -------- */
     .survey-options {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 14px;
       margin-bottom: 8px;
     }
 
     @media (max-width: 600px) {
-      .survey-options { grid-template-columns: 1fr; }
+      .survey-options { grid-template-columns: repeat(2, 1fr); }
     }
 
     .survey-opt {
@@ -1364,6 +1364,12 @@
               <div class="survey-desc">כולל שירותים</div>
             </div>
           </div>
+          <div class="survey-opt-readonly" data-val="ממד בנייה באתר">
+            <div class="survey-opt-inner">
+              <div class="survey-size" style="font-size:1.6rem;">🏗️</div>
+              <div class="survey-desc">ממד בנייה באתר</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1397,6 +1403,13 @@
             <div class="survey-opt-inner">
               <div class="survey-size">12 <span>מ"ר</span></div>
               <div class="survey-desc">כולל שירותים</div>
+            </div>
+          </label>
+          <label class="survey-opt" data-size="build">
+            <input type="radio" name="mamad_size" value="ממד בנייה באתר" />
+            <div class="survey-opt-inner">
+              <div class="survey-size" style="font-size:1.6rem;">🏗️</div>
+              <div class="survey-desc">ממד בנייה באתר</div>
             </div>
           </label>
         </div>
