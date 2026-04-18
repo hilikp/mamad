@@ -1032,6 +1032,65 @@
       color: #1a2340;
     }
 
+    /* -------- IMAGE MODAL -------- */
+    #img-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 8000;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
+    #img-modal.open { display: flex; }
+    #img-modal-inner {
+      position: relative;
+      max-width: 92vw;
+      max-height: 92vh;
+      cursor: default;
+    }
+    #img-modal img {
+      max-width: 88vw;
+      max-height: 82vh;
+      border-radius: 10px;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.6);
+      display: block;
+    }
+    #img-modal-caption {
+      text-align: center;
+      color: #cde;
+      font-size: 0.92rem;
+      padding: 10px 0 0;
+    }
+    #img-modal-close {
+      position: absolute;
+      top: -14px;
+      left: -14px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #fff;
+      border: none;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      color: #333;
+      line-height: 32px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .plan-link {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #1a5fa8;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .plan-link:hover { color: #0d3d78; }
+
   </style>
 </head>
 <body>
@@ -1147,9 +1206,18 @@
                   <strong>מגן איתן בע"מ</strong><br>
                   <small style="color:#888;">מאושר פיקוד העורף</small>
                 </td>
-                <td class="price-cell">75,000 ₪</td>
-                <td class="price-cell">75,000 ₪</td>
-                <td class="price-cell">120,000 ₪</td>
+                <td class="price-cell">
+                  75,000 ₪<br>
+                  <span class="plan-link" onclick="openModal('mamad5.png','שרטוט ממ&quot;ד 5 מ&quot;ר + מבואה')">📐 שרטוט</span>
+                </td>
+                <td class="price-cell">
+                  75,000 ₪<br>
+                  <span class="plan-link" onclick="openModal('mamad9.png','שרטוט ממ&quot;ד 9 מ&quot;ר')">📐 שרטוט</span>
+                </td>
+                <td class="price-cell">
+                  120,000 ₪<br>
+                  <span class="plan-link" onclick="openModal('mamad12.png','שרטוט ממ&quot;ד 12 מ&quot;ר + שירותים')">📐 שרטוט</span>
+                </td>
                 <td style="font-size:0.85rem; color:#555;">
                   הובלה + פריקה כלולים<br>
                   ביסוס נפרד לפי תכנית
@@ -1688,6 +1756,33 @@
         if (err) console.error('QR error:', err);
       });
     })();
+    /* ============================================================
+       IMAGE MODAL
+    ============================================================ */
+    function openModal(imgFile, caption) {
+      document.getElementById('modal-img').src = imgFile;
+      document.getElementById('img-modal-caption').textContent = caption;
+      document.getElementById('img-modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      document.getElementById('img-modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
   </script>
+
+  <!-- IMAGE MODAL -->
+  <div id="img-modal" onclick="closeModal()">
+    <div id="img-modal-inner" onclick="event.stopPropagation()">
+      <button id="img-modal-close" onclick="closeModal()">✕</button>
+      <img id="modal-img" src="" alt="שרטוט ממד" />
+      <div id="img-modal-caption"></div>
+    </div>
+  </div>
+
 </body>
 </html>
