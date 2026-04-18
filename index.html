@@ -609,6 +609,33 @@
       color: #7ec8f5;
     }
 
+    .budget-subtotals {
+      margin-top: 16px;
+      background: #f0f4fa;
+      border-radius: 10px 10px 0 0;
+      padding: 4px 20px;
+      border: 1px solid #d8e4f0;
+      border-bottom: none;
+    }
+    .budget-sub-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      font-size: 0.92rem;
+      color: #333;
+      border-bottom: 1px solid #dde7f2;
+    }
+    .budget-vat-row {
+      color: #777;
+      font-size: 0.88rem;
+      border-bottom: none;
+    }
+    .budget-total {
+      margin-top: 0 !important;
+      border-radius: 0 0 12px 12px;
+    }
+
     /* -------- SURVEY -------- */
     .survey-options {
       display: grid;
@@ -1153,10 +1180,10 @@
           <div class="cost-rows">
             <div class="cost-row"><span>ממד יביל (ספק)</span><span>75,000 ₪</span></div>
             <div class="cost-row"><span>עורך בקשה - הנחת קבוצה</span><span>10,000 ₪</span></div>
-            <div class="cost-row"><span>ביסוס ועבודות בטון (הערכה)</span><span>10,000-25,000 ₪</span></div>
+            <div class="cost-row"><span>ביסוס, יציקות וחיבור לבית (הערכה)</span><span>20,000-50,000 ₪</span></div>
             <div class="cost-row"><span>שונות: מדידה + בדיקות + אגרות</span><span>כ-3,700 ₪</span></div>
-            <div class="cost-row cost-total"><span>סה"כ לפני מע"מ</span><span>כ-99,000-114,000 ₪</span></div>
-            <div class="cost-row cost-vat"><span>+ מע"מ 18%</span><span>כ-117,000-134,000 ₪</span></div>
+            <div class="cost-row cost-total"><span>סה"כ לפני מע"מ</span><span>כ-109,000-139,000 ₪</span></div>
+            <div class="cost-row cost-vat"><span>+ מע"מ 18%</span><span>כ-129,000-164,000 ₪</span></div>
           </div>
         </div>
       </div>
@@ -1222,19 +1249,14 @@
           </div>
         </div>
 
-        <div class="binui-tip">
-          💡 <strong>מתי כדאי ממד בנייה?</strong> כאשר שטח הגינה מאפשר בנייה ואין מגבלות גישה.
-          ממד בנייה אינו תלוי בהוראת השעה - תקף לצמיתות ללא מגבלת זמן.
-          העלות גבוהה יותר אך הוא חלק בלתי נפרד מהנכס.
-        </div>
       </div>
 
     </div>
 
     <!-- BUDGET CALCULATOR -->
     <div class="card" id="sec-budget">
-      <h2>🧮 מחשבון תקציב גס</h2>
-      <p class="budget-note">יעודכן בימים הקרובים עם נתוני עלויות אמיתיים מהשוק. בינתיים ניתן להזין סכומים ידנית לבדיקה עצמית.</p>
+      <h2>🧮 מחשבון תקציב</h2>
+      <p class="budget-note">הזינו את הנתונים לפי הצעות המחיר שקיבלתם - המחשבון יחשב סה"כ לפני מע"מ ואחריו.</p>
 
       <div class="budget-rows">
 
@@ -1243,14 +1265,13 @@
             <span class="budget-icon">📐</span>
             <div>
               <div class="budget-name">עורך בקשה</div>
-              <div class="budget-sub">אדריכל / מהנדס / הנדסאי</div>
+              <div class="budget-sub">אדריכל / מהנדס / הגשה להג"א (הנחת קבוצה: 10,000 ₪)</div>
             </div>
           </div>
           <div class="budget-input-wrap">
             <span class="budget-currency">₪</span>
-            <input class="budget-input" type="number" id="b-architect" maxlength="5"
-              placeholder="0" min="0" max="99999" oninput="calcBudget()" disabled />
-            <span class="budget-tbd">בקרוב</span>
+            <input class="budget-input" type="number" id="b-architect"
+              placeholder="10000" min="0" max="99999" oninput="calcBudget()" />
           </div>
         </div>
 
@@ -1258,15 +1279,29 @@
           <div class="budget-label">
             <span class="budget-icon">🏭</span>
             <div>
-              <div class="budget-name">ספק הממ"ד היביל</div>
-              <div class="budget-sub">עלות הממד + התקנה</div>
+              <div class="budget-name">ספק הממ"ד</div>
+              <div class="budget-sub">עלות הממד כולל הובלה ופריקה</div>
             </div>
           </div>
           <div class="budget-input-wrap">
             <span class="budget-currency">₪</span>
-            <input class="budget-input" type="number" id="b-vendor" maxlength="6"
-              placeholder="0" min="0" max="999999" oninput="calcBudget()" disabled />
-            <span class="budget-tbd">בקרוב</span>
+            <input class="budget-input" type="number" id="b-vendor"
+              placeholder="75000" min="0" max="999999" oninput="calcBudget()" />
+          </div>
+        </div>
+
+        <div class="budget-row">
+          <div class="budget-label">
+            <span class="budget-icon">🏗️</span>
+            <div>
+              <div class="budget-name">ביסוס, יציקות וחיבור לבית</div>
+              <div class="budget-sub">הערכה: 20,000-50,000 ₪ - משתנה לפי בית</div>
+            </div>
+          </div>
+          <div class="budget-input-wrap">
+            <span class="budget-currency">₪</span>
+            <input class="budget-input" type="number" id="b-foundation"
+              placeholder="30000" min="0" max="999999" oninput="calcBudget()" />
           </div>
         </div>
 
@@ -1275,21 +1310,30 @@
             <span class="budget-icon">🔧</span>
             <div>
               <div class="budget-name">שונות</div>
-              <div class="budget-sub">מדידות, בדיקות בטון, בלת"מ</div>
+              <div class="budget-sub">מדידה, בדיקות בטון, אגרות רישוי (~3,700 ₪)</div>
             </div>
           </div>
           <div class="budget-input-wrap">
             <span class="budget-currency">₪</span>
-            <input class="budget-input" type="number" id="b-misc" maxlength="5"
-              placeholder="0" min="0" max="99999" oninput="calcBudget()" disabled />
-            <span class="budget-tbd">בקרוב</span>
+            <input class="budget-input" type="number" id="b-misc"
+              placeholder="3700" min="0" max="99999" oninput="calcBudget()" />
           </div>
         </div>
 
       </div>
 
+      <div class="budget-subtotals">
+        <div class="budget-sub-row">
+          <span>סה"כ לפני מע"מ</span>
+          <span id="budget-pretax">— ₪</span>
+        </div>
+        <div class="budget-sub-row budget-vat-row">
+          <span>מע"מ 18%</span>
+          <span id="budget-vat">— ₪</span>
+        </div>
+      </div>
       <div class="budget-total" id="budget-total-row">
-        <span>סה"כ משוער</span>
+        <span>סה"כ כולל מע"מ</span>
         <span class="budget-total-num" id="budget-total">— ₪</span>
       </div>
     </div>
@@ -1524,14 +1568,21 @@
        BUDGET CALCULATOR
     ============================================================ */
     function calcBudget() {
-      const a = parseFloat(document.getElementById('b-architect').value) || 0;
-      const v = parseFloat(document.getElementById('b-vendor').value)   || 0;
-      const m = parseFloat(document.getElementById('b-misc').value)     || 0;
-      const total = a + v + m;
-      const el = document.getElementById('budget-total');
-      el.textContent = total > 0
-        ? '₪ ' + total.toLocaleString('he-IL')
-        : '— ₪';
+      const a = parseFloat(document.getElementById('b-architect').value)  || 0;
+      const v = parseFloat(document.getElementById('b-vendor').value)     || 0;
+      const f = parseFloat(document.getElementById('b-foundation').value) || 0;
+      const m = parseFloat(document.getElementById('b-misc').value)       || 0;
+      const pretax = a + v + f + m;
+      const vat    = Math.round(pretax * 0.18);
+      const total  = pretax + vat;
+
+      const fmt = function(n) {
+        return n > 0 ? '₪ ' + Math.round(n).toLocaleString('he-IL') : '— ₪';
+      };
+
+      document.getElementById('budget-pretax').textContent = fmt(pretax);
+      document.getElementById('budget-vat').textContent    = fmt(vat);
+      document.getElementById('budget-total').textContent  = fmt(total);
     }
 
     /* ============================================================
