@@ -862,6 +862,149 @@
       font-size: 0.8rem;
       color: rgba(255,255,255,0.7);
     }
+
+    /* -------- PRICE SITUATION SECTION -------- */
+    .price-alert-box {
+      background: #fff8e1;
+      border: 2px solid #ffe082;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 22px;
+      font-size: 0.9rem;
+      line-height: 1.85;
+    }
+    .price-alert-box ul { padding-right: 20px; margin-top: 8px; }
+    .price-alert-box li { margin-bottom: 5px; }
+
+    .price-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+    .price-tab {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid #c5d5ea;
+      border-radius: 10px;
+      background: #f0f4fa;
+      font-family: 'Heebo', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1a2340;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .price-tab.active {
+      background: #0a2a6e;
+      color: #fff;
+      border-color: #0a2a6e;
+    }
+    .price-tab:hover:not(.active) { background: #e0eaf5; }
+
+    .price-section-intro {
+      color: #555;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      line-height: 1.65;
+    }
+
+    .price-cell {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: #0a2a6e;
+      text-align: center;
+    }
+
+    .price-footnote {
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .group-discount-box {
+      background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+      border: 2px solid #81c784;
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-top: 22px;
+      text-align: center;
+    }
+    .group-discount-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #2e7d32;
+      margin-bottom: 6px;
+    }
+    .group-discount-price {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #2e7d32;
+      margin: 10px 0 6px;
+    }
+    .group-discount-sub {
+      font-size: 0.85rem;
+      color: #555;
+      line-height: 1.65;
+      margin-top: 6px;
+    }
+
+    .cost-summary {
+      background: #f5f7fb;
+      border: 1px solid #d8e4f0;
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-top: 22px;
+    }
+    .cost-summary-title {
+      font-size: 0.97rem;
+      font-weight: 700;
+      color: #0a2a6e;
+      margin-bottom: 14px;
+    }
+    .cost-rows { display: flex; flex-direction: column; gap: 0; }
+    .cost-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      padding: 8px 0;
+      border-bottom: 1px solid #e4edf6;
+    }
+    .cost-row:last-child { border-bottom: none; }
+    .cost-row.cost-total {
+      border-top: 2px solid #0a2a6e;
+      border-bottom: none;
+      padding-top: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0a2a6e;
+    }
+    .cost-row.cost-vat {
+      color: #777;
+      font-size: 0.85rem;
+      font-style: italic;
+    }
+
+    .includes-list, .excludes-list {
+      padding-right: 16px;
+      margin: 0;
+      font-size: 0.85rem;
+      line-height: 1.9;
+    }
+    .includes-list li::marker { color: #2e7d32; }
+    .excludes-list li::marker { color: #c62828; }
+
+    .binui-tip {
+      background: #e3f2fd;
+      border-right: 4px solid #1a5fa8;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-top: 18px;
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: #1a2340;
+    }
+
   </style>
 </head>
 <body>
@@ -875,7 +1018,7 @@
       <div class="nav-links">
         <a href="#sec-status">שלב התהליך</a>
 <a href="#sec-budget">תקציב</a>
-        <a href="#sec-vendors">ספקים</a>
+        <a href="#sec-prices">מחירים</a>
         <a href="#sec-families">סקר דגמים</a>
         <a href="#sec-oref">פיקוד העורף</a>
         <a href="#sec-license">רישוי</a>
@@ -933,38 +1076,159 @@
       </div>
     </div>
 
-    <!-- VENDORS TABLE -->
-    <div class="card" id="sec-vendors">
-      <h2>💰 ספקים ומחירים מוצעים</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>שם חברה</th>
-              <th>ממד 5 מ"ר</th>
-              <th>ממד 9 מ"ר</th>
-              <th>ממד 12 מ"ר</th>
-              <th>תוקף אישור</th>
-              <th>הערות</th>
-            </tr>
-          </thead>
-          <tbody id="vendors-tbody">
-            <!-- להוסיף שורות כאן לפי הדוגמה:
-            <tr>
-              <td>שם החברה</td>
-              <td>₪ 00,000</td>
-              <td>₪ 00,000</td>
-              <td>₪ 00,000</td>
-              <td>01/2027</td>
-              <td>—</td>
-            </tr>
-            -->
-            <tr class="empty-row">
-              <td colspan="6">⏳ ממתינים להצעות ספקים — הטבלה תתעדכן בקרוב</td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- PRICES SECTION -->
+    <div class="card" id="sec-prices">
+      <h2>💰 תמונת מצב - הצעות מחיר</h2>
+
+      <div class="price-alert-box">
+        <strong>📌 לתשומת ליבכם לפני הצפייה במחירים:</strong>
+        <ul>
+          <li>כל המחירים <strong>לפני מע"מ 18%</strong></li>
+          <li>עבודת ביסוס (ביטון) <strong>אינה כלולה</strong> במחיר הממד היביל - עלות משתנה לפי מצב הקרקע בכל בית</li>
+          <li>⭐ <strong>הנחת קבוצת רכישה:</strong> עורך בקשה + הנדסה + הגשה להג"א =
+            <strong>10,000 ₪ לדייר</strong> (במקום כ-20,000 ₪ לדייר בודד) - בתנאי 50 דיירים ומעלה</li>
+        </ul>
       </div>
+
+      <!-- TABS -->
+      <div class="price-tabs">
+        <button class="price-tab active" data-tab="yaviyl" onclick="switchPriceTab('yaviyl')">🏠 ממד יביל</button>
+        <button class="price-tab" data-tab="binui" onclick="switchPriceTab('binui')">🏗️ ממד בנייה</button>
+      </div>
+
+      <!-- TAB: PORTABLE MAMAD -->
+      <div id="tab-yaviyl" class="tab-content">
+        <p class="price-section-intro">
+          ממד יביל: יחידה מוכנה מראש, מיוצרת במפעל ומובלת לבית. <strong>הובלה ופריקה כלולים במחיר.</strong>
+          עבודת הביסוס בטון מתבצעת בנפרד לפי דוח קרקע ספציפי לכל בית.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ספק</th>
+                <th>ממ"ד 5 מ"ר + מבואה</th>
+                <th>ממ"ד 9 מ"ר</th>
+                <th>ממ"ד 12 מ"ר + שירותים</th>
+                <th>הערות</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong>מגן איתן בע"מ</strong><br>
+                  <small style="color:#888;">מאושר פיקוד העורף</small>
+                </td>
+                <td class="price-cell">75,000 ₪</td>
+                <td class="price-cell">75,000 ₪</td>
+                <td class="price-cell">120,000 ₪</td>
+                <td style="font-size:0.85rem; color:#555;">
+                  הובלה + פריקה כלולים<br>
+                  ביסוס נפרד לפי תכנית
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="price-footnote">* כל המחירים לפני מע"מ 18% &nbsp;|&nbsp; ביסוס ועבודות בטון - לפי תכנית מהנדס וייעוץ קרקע, בנפרד</div>
+
+        <!-- GROUP DISCOUNT -->
+        <div class="group-discount-box">
+          <div class="group-discount-title">⭐ הנחת קבוצת רכישה - עורך בקשה + הנדסה + היתר</div>
+          <p style="font-size:0.88rem; color:#555;">עבור 50 דיירים ומעלה, הוסכם על מחיר מאוחד:</p>
+          <div class="group-discount-price">10,000 ₪ לדייר</div>
+          <div class="group-discount-sub">
+            כולל: תכנון אדריכלי + קונסטרוקציה + הגשה לפיקוד העורף + פיקוח עליון + טופס 4<br>
+            (מחיר לדייר בודד: כ-20,000 ₪)
+          </div>
+          <div class="group-discount-sub" style="margin-top:8px; color:#888; font-size:0.82rem;">
+            לא כולל: מדידה (כ-1,500 ₪) &nbsp;|&nbsp; בדיקות בטון (כ-1,200 ₪) &nbsp;|&nbsp; אגרות רישוי (כ-1,000 ₪)
+          </div>
+        </div>
+
+        <!-- COST ESTIMATE -->
+        <div class="cost-summary">
+          <div class="cost-summary-title">📊 הערכת עלות כוללת - ממ"ד יביל 9 מ"ר (לדוגמה)</div>
+          <div class="cost-rows">
+            <div class="cost-row"><span>ממד יביל (ספק)</span><span>75,000 ₪</span></div>
+            <div class="cost-row"><span>עורך בקשה - הנחת קבוצה</span><span>10,000 ₪</span></div>
+            <div class="cost-row"><span>ביסוס ועבודות בטון (הערכה)</span><span>10,000-25,000 ₪</span></div>
+            <div class="cost-row"><span>שונות: מדידה + בדיקות + אגרות</span><span>כ-3,700 ₪</span></div>
+            <div class="cost-row cost-total"><span>סה"כ לפני מע"מ</span><span>כ-99,000-114,000 ₪</span></div>
+            <div class="cost-row cost-vat"><span>+ מע"מ 18%</span><span>כ-117,000-134,000 ₪</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: BUILT MAMAD -->
+      <div id="tab-binui" class="tab-content" style="display:none;">
+        <p class="price-section-intro">
+          ממד בנייה: נבנה במקום, מבטון יצוק. כולל את כל שלבי הבנייה מהחפירה ועד הגמר.
+          <strong>אופציה זו כוללת תכנון ואינה תלויה בהוראת השעה.</strong>
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ספק</th>
+                <th>ממ"ד 9 מ"ר</th>
+                <th>מה כלול</th>
+                <th>מה לא כלול</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong>מ.ר.ק ביצוע בע"מ</strong><br>
+                  <small style="color:#888;">ראשון לציון</small>
+                </td>
+                <td class="price-cell">149,900 ₪</td>
+                <td>
+                  <ul class="includes-list">
+                    <li>תכנון לפי פיקוד העורף</li>
+                    <li>חפירה + ביסוס</li>
+                    <li>יציקת בטון - רצפה, קירות, תקרה</li>
+                    <li>דלת + חלון + אוורור</li>
+                    <li>חשמל + תקשורת</li>
+                    <li>גמר: טיח, ריצוף, צבע, איטום</li>
+                  </ul>
+                </td>
+                <td>
+                  <ul class="excludes-list">
+                    <li>מדידה (אם נדרשת)</li>
+                    <li>בדיקות בטון במעבדה</li>
+                    <li>פיתוח חוץ וגינה</li>
+                    <li>מזגן</li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="price-footnote">
+          * המחיר לפני מע"מ 18% &nbsp;|&nbsp; תוספות: הנפת ציוד +6,900 ₪ / גישה מורכבת +11,900 ₪
+        </div>
+
+        <!-- COST ESTIMATE -->
+        <div class="cost-summary">
+          <div class="cost-summary-title">📊 הערכת עלות כוללת - ממ"ד בנייה 9 מ"ר</div>
+          <div class="cost-rows">
+            <div class="cost-row"><span>ממד בנייה - תכנון וביצוע מלא</span><span>149,900 ₪</span></div>
+            <div class="cost-row"><span>שונות: מדידה + בדיקות + אגרות</span><span>כ-3,700 ₪</span></div>
+            <div class="cost-row cost-total"><span>סה"כ לפני מע"מ</span><span>כ-153,600 ₪</span></div>
+            <div class="cost-row cost-vat"><span>+ מע"מ 18%</span><span>כ-181,000 ₪</span></div>
+          </div>
+        </div>
+
+        <div class="binui-tip">
+          💡 <strong>מתי כדאי ממד בנייה?</strong> כאשר שטח הגינה מאפשר בנייה ואין מגבלות גישה.
+          ממד בנייה אינו תלוי בהוראת השעה - תקף לצמיתות ללא מגבלת זמן.
+          העלות גבוהה יותר אך הוא חלק בלתי נפרד מהנכס.
+        </div>
+      </div>
+
     </div>
 
     <!-- BUDGET CALCULATOR -->
@@ -1241,6 +1505,20 @@
         el.textContent = Math.floor(current);
       }, interval);
     })();
+
+    /* ============================================================
+       PRICE TABS
+    ============================================================ */
+    function switchPriceTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(function(t) {
+        t.style.display = 'none';
+      });
+      document.querySelectorAll('.price-tab').forEach(function(b) {
+        b.classList.remove('active');
+        if (b.dataset.tab === tabId) b.classList.add('active');
+      });
+      document.getElementById('tab-' + tabId).style.display = 'block';
+    }
 
     /* ============================================================
        BUDGET CALCULATOR
