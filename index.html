@@ -1091,6 +1091,164 @@
     }
     .plan-link:hover { color: #0d3d78; }
 
+    /* -------- DECISION WIZARD -------- */
+    #wizard-intro { text-align: center; padding: 14px 0; }
+    #wizard-intro p {
+      color: #555; line-height: 1.7;
+      margin-bottom: 20px; font-size: 0.95rem;
+    }
+    .wizard-start-btn {
+      background: linear-gradient(135deg, #1a5fa8, #0a2a6e);
+      color: #fff; border: none;
+      padding: 14px 32px; border-radius: 30px;
+      font-size: 1rem; font-weight: 700;
+      cursor: pointer; font-family: 'Heebo', sans-serif;
+      box-shadow: 0 4px 14px rgba(10,42,110,0.3);
+      transition: all 0.2s;
+    }
+    .wizard-start-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(10,42,110,0.4); }
+
+    .wizard-progress {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 20px;
+      font-size: 0.85rem; color: #666; gap: 14px;
+    }
+    .wizard-progress-bar {
+      flex: 1; height: 6px;
+      background: #e0eaf5; border-radius: 3px;
+      overflow: hidden;
+    }
+    .wizard-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1a5fa8, #2e7d32);
+      border-radius: 3px; transition: width 0.4s;
+    }
+
+    .wizard-q-title {
+      font-size: 1.2rem; font-weight: 800;
+      color: #0a2a6e; margin-bottom: 6px;
+    }
+    .wizard-q-desc {
+      font-size: 0.9rem; color: #666;
+      margin-bottom: 18px; line-height: 1.6;
+    }
+
+    .wizard-options { display: flex; flex-direction: column; gap: 10px; }
+    .wizard-opt {
+      border: 2px solid #c5d5ea; border-radius: 12px;
+      padding: 14px 18px; cursor: pointer;
+      display: flex; align-items: center; gap: 14px;
+      transition: all 0.2s; background: #fff;
+    }
+    .wizard-opt:hover { border-color: #1a5fa8; background: #f0f4fa; }
+    .wizard-opt.selected {
+      border-color: #1a5fa8; background: #e3f0fb;
+      box-shadow: 0 0 0 3px rgba(26,95,168,0.15);
+    }
+    .wizard-opt-icon { font-size: 1.7rem; flex-shrink: 0; }
+    .wizard-opt-text { flex: 1; }
+    .wizard-opt-label { font-weight: 700; font-size: 1rem; color: #1a2340; }
+    .wizard-opt-sub { font-size: 0.85rem; color: #666; margin-top: 2px; }
+
+    .wizard-nav {
+      display: flex; justify-content: space-between;
+      margin-top: 22px; gap: 12px;
+    }
+    .wizard-nav button {
+      padding: 12px 24px; border-radius: 10px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 0.95rem; font-weight: 700;
+      cursor: pointer;
+    }
+    .wizard-nav button.primary {
+      background: #0a2a6e; color: #fff; border: 2px solid #0a2a6e;
+    }
+    .wizard-nav button.primary:hover:not(:disabled) { background: #061f54; }
+    .wizard-nav button.secondary {
+      background: #fff; color: #1a2340; border: 2px solid #c5d5ea;
+    }
+    .wizard-nav button.secondary:hover:not(:disabled) { background: #f0f4fa; }
+    .wizard-nav button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .wizard-result-card { text-align: center; }
+    .wizard-result-badge {
+      display: inline-block; padding: 6px 16px;
+      border-radius: 30px; font-size: 0.85rem;
+      font-weight: 700; margin-bottom: 12px;
+    }
+    .wizard-result-badge.yaviyl { background: #e3f2fd; color: #1565c0; }
+    .wizard-result-badge.binui { background: #fff3e0; color: #e65100; }
+    .wizard-result-badge.both { background: #f3e5f5; color: #6a1b9a; }
+    .wizard-result-title {
+      font-size: 1.5rem; font-weight: 900;
+      color: #0a2a6e; margin-bottom: 4px;
+    }
+    .wizard-result-sub {
+      font-size: 0.92rem; color: #666;
+      margin-bottom: 22px; line-height: 1.6;
+    }
+
+    .wizard-score-bars { margin: 22px 0; }
+    .wizard-score-row {
+      display: flex; align-items: center;
+      margin-bottom: 10px; gap: 12px;
+    }
+    .wizard-score-label {
+      width: 78px; font-size: 0.9rem;
+      font-weight: 700; text-align: right;
+      flex-shrink: 0;
+    }
+    .wizard-score-bar {
+      flex: 1; height: 28px;
+      background: #f0f4fa; border-radius: 14px;
+      overflow: hidden; position: relative;
+    }
+    .wizard-score-fill {
+      height: 100%; border-radius: 14px;
+      transition: width 0.7s ease;
+      display: flex; align-items: center;
+      padding: 0 12px;
+      font-size: 0.85rem; font-weight: 700; color: #fff;
+    }
+    .wizard-score-fill.yaviyl { background: linear-gradient(90deg, #42a5f5, #1565c0); }
+    .wizard-score-fill.binui { background: linear-gradient(90deg, #ffb74d, #e65100); }
+
+    .wizard-reasons {
+      background: #f5f7fb; border-radius: 12px;
+      padding: 16px 20px; margin: 18px 0;
+      text-align: right;
+    }
+    .wizard-reasons-title {
+      font-weight: 700; font-size: 0.95rem;
+      color: #0a2a6e; margin-bottom: 10px;
+    }
+    .wizard-reasons p {
+      font-size: 0.9rem; line-height: 1.65;
+      color: #444;
+    }
+    .wizard-reasons ul {
+      padding-right: 20px; margin-top: 8px;
+      font-size: 0.88rem; line-height: 1.85; color: #333;
+    }
+
+    .wizard-result-actions {
+      display: flex; gap: 10px;
+      justify-content: center; flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .wizard-result-actions a, .wizard-result-actions button {
+      padding: 11px 20px; border-radius: 10px;
+      font-size: 0.92rem; font-weight: 700;
+      cursor: pointer; font-family: 'Heebo', sans-serif;
+      border: 2px solid #c5d5ea; background: #fff;
+      color: #1a2340; text-decoration: none;
+    }
+    .wizard-result-actions a.primary, .wizard-result-actions button.primary {
+      background: #0a2a6e; color: #fff; border-color: #0a2a6e;
+    }
+    .wizard-result-actions a.primary:hover { background: #061f54; }
+    .wizard-result-actions button:hover { background: #f0f4fa; }
+
   </style>
 </head>
 <body>
@@ -1105,6 +1263,7 @@
         <a href="#sec-status">שלב התהליך</a>
 <a href="#sec-budget">תקציב</a>
         <a href="#sec-prices">מחירים</a>
+        <a href="#sec-wizard">אשף החלטה</a>
         <a href="#sec-families">סקר דגמים</a>
         <a href="#sec-oref">פיקוד העורף</a>
         <a href="#sec-license">רישוי</a>
@@ -1332,6 +1491,34 @@
 
       </div>
 
+    </div>
+
+    <!-- DECISION WIZARD -->
+    <div class="card" id="sec-wizard">
+      <h2>🤔 אשף החלטה - יביל או בנייה?</h2>
+
+      <!-- INTRO -->
+      <div id="wizard-intro">
+        <p>לא בטוחים איזה ממד מתאים לכם? ענו על 5 שאלות קצרות וקבלו המלצה מותאמת אישית בהתאם לתנאים אצלכם בבית - גישה, תקציב, אופק זמן ועוד.</p>
+        <button class="wizard-start-btn" onclick="startWizard()">התחלת אשף ←</button>
+      </div>
+
+      <!-- QUESTIONS -->
+      <div id="wizard-questions" style="display:none;">
+        <div class="wizard-progress">
+          <span>שאלה <span id="wq-num">1</span> מתוך 5</span>
+          <div class="wizard-progress-bar"><div class="wizard-progress-fill" id="wq-fill" style="width:20%"></div></div>
+          <span id="wq-pct">20%</span>
+        </div>
+        <div id="wq-content"></div>
+        <div class="wizard-nav">
+          <button class="secondary" id="wq-back" onclick="wizardBack()">← חזרה</button>
+          <button class="primary" id="wq-next" onclick="wizardNext()" disabled>המשך ←</button>
+        </div>
+      </div>
+
+      <!-- RESULT -->
+      <div id="wizard-result" style="display:none;"></div>
     </div>
 
     <!-- BUDGET CALCULATOR -->
@@ -1643,6 +1830,182 @@
         el.textContent = Math.floor(current);
       }, interval);
     })();
+
+    /* ============================================================
+       DECISION WIZARD
+    ============================================================ */
+    const WIZARD_QUESTIONS = [
+      {
+        title: 'גישה לחצר עבור משאית או מנוף',
+        desc: 'התקנת ממד יביל מחייבת הגעה של משאית כבדה ומנוף שיניחו את היחידה במקומה. זה הגורם הטכני המכריע ביותר.',
+        options: [
+          { label: 'גישה מצוינת', sub: 'משאית/מנוף מגיעים ישירות לאזור ההצבה', icon: '🚛', y: 3, b: 0 },
+          { label: 'גישה בינונית', sub: 'אפשרי עם מנוף קטן או דרך הצד', icon: '🚐', y: 1, b: 1 },
+          { label: 'גישה קשה', sub: 'סמטה צרה, חצר אחורית, או אין גישה למנוף', icon: '🚧', y: 0, b: 3 }
+        ]
+      },
+      {
+        title: 'תקציב מתוכנן (כולל מע"מ)',
+        desc: 'תקציב כולל לפרויקט - ממד + עורך בקשה + ביסוס + שונות.',
+        options: [
+          { label: 'חסכוני', sub: 'עד 120,000 ₪', icon: '💵', y: 3, b: 0 },
+          { label: 'בינוני', sub: '120,000 - 180,000 ₪', icon: '💰', y: 1, b: 1 },
+          { label: 'גמיש', sub: 'מעל 180,000 ₪', icon: '💎', y: 0, b: 2 }
+        ]
+      },
+      {
+        title: 'דחיפות ההתקנה',
+        desc: 'ממד יביל מיוצר במפעל ומותקן תוך כשבוע. ממד בנייה דורש חודשי בנייה באתר.',
+        options: [
+          { label: 'דחוף', sub: '1-3 חודשים מהיום', icon: '⚡', y: 3, b: 0 },
+          { label: 'רגיל', sub: '3-6 חודשים', icon: '⏳', y: 1, b: 0 },
+          { label: 'אין לחץ', sub: '6 חודשים ויותר', icon: '🗓️', y: 0, b: 2 }
+        ]
+      },
+      {
+        title: 'אופק הזמן בבית',
+        desc: 'ממד יביל בהוראת השעה תקף עד 10/2026. ממד בנייה עם היתר קבוע - לצמיתות.',
+        options: [
+          { label: 'קצר טווח', sub: 'פחות מ-5 שנים, מתכננים מעבר', icon: '🏃', y: 2, b: 0 },
+          { label: 'בינוני', sub: '5-15 שנים', icon: '🏠', y: 1, b: 1 },
+          { label: 'לצמיתות', sub: 'מעל 15 שנים / לדורות', icon: '🏛️', y: 0, b: 3 }
+        ]
+      },
+      {
+        title: 'חשיבות אסתטיקה והשתלבות',
+        desc: 'ממד בנייה משתלב כחלק מהבית מבחינה ויזואלית. ממד יביל הוא תוספת חיצונית נפרדת.',
+        options: [
+          { label: 'לא קריטי', sub: 'העיקר שיהיה בטוח ותפקודי', icon: '🛡️', y: 2, b: 0 },
+          { label: 'מעדיף השתלבות', sub: 'נחמד אך לא קריטי', icon: '🎨', y: 0, b: 1 },
+          { label: 'חשוב מאוד', sub: 'חייב להיראות כחלק מהבית', icon: '🏡', y: 0, b: 3 }
+        ]
+      }
+    ];
+
+    let wizardState = { current: 0, answers: [] };
+
+    function startWizard() {
+      wizardState = { current: 0, answers: [] };
+      document.getElementById('wizard-intro').style.display = 'none';
+      document.getElementById('wizard-result').style.display = 'none';
+      document.getElementById('wizard-questions').style.display = 'block';
+      renderWizardQuestion();
+    }
+
+    function renderWizardQuestion() {
+      const q = WIZARD_QUESTIONS[wizardState.current];
+      const num = wizardState.current + 1;
+      const total = WIZARD_QUESTIONS.length;
+      const pct = Math.round((num / total) * 100);
+
+      document.getElementById('wq-num').textContent = num;
+      document.getElementById('wq-fill').style.width = pct + '%';
+      document.getElementById('wq-pct').textContent = pct + '%';
+
+      let html = '<div class="wizard-q-title">' + q.title + '</div>' +
+                 '<div class="wizard-q-desc">' + q.desc + '</div>' +
+                 '<div class="wizard-options">';
+      q.options.forEach(function(opt, i) {
+        const sel = wizardState.answers[wizardState.current] === i ? ' selected' : '';
+        html += '<div class="wizard-opt' + sel + '" onclick="selectWizardOption(' + i + ')">' +
+                '<div class="wizard-opt-icon">' + opt.icon + '</div>' +
+                '<div class="wizard-opt-text">' +
+                '<div class="wizard-opt-label">' + opt.label + '</div>' +
+                '<div class="wizard-opt-sub">' + opt.sub + '</div>' +
+                '</div></div>';
+      });
+      html += '</div>';
+
+      document.getElementById('wq-content').innerHTML = html;
+      document.getElementById('wq-back').disabled = wizardState.current === 0;
+      document.getElementById('wq-next').disabled =
+        wizardState.answers[wizardState.current] === undefined;
+      document.getElementById('wq-next').textContent =
+        wizardState.current === total - 1 ? 'הצג תוצאה ←' : 'המשך ←';
+    }
+
+    function selectWizardOption(i) {
+      wizardState.answers[wizardState.current] = i;
+      renderWizardQuestion();
+    }
+
+    function wizardBack() {
+      if (wizardState.current > 0) {
+        wizardState.current--;
+        renderWizardQuestion();
+      }
+    }
+
+    function wizardNext() {
+      if (wizardState.current < WIZARD_QUESTIONS.length - 1) {
+        wizardState.current++;
+        renderWizardQuestion();
+      } else {
+        showWizardResult();
+      }
+    }
+
+    function showWizardResult() {
+      let yaviyl = 0, binui = 0;
+      const considerations = [];
+
+      wizardState.answers.forEach(function(ansIdx, qIdx) {
+        const q = WIZARD_QUESTIONS[qIdx];
+        const opt = q.options[ansIdx];
+        yaviyl += opt.y;
+        binui += opt.b;
+        considerations.push('<li>' + q.title + ': <strong>' + opt.label + '</strong></li>');
+      });
+
+      const total = yaviyl + binui;
+      const yPct = total > 0 ? Math.round((yaviyl / total) * 100) : 50;
+      const bPct = 100 - yPct;
+      const diff = yaviyl - binui;
+
+      let badge, title, sub;
+      if (Math.abs(diff) <= 2) {
+        badge = '<span class="wizard-result-badge both">⚖️ שתי האופציות שקולות</span>';
+        title = 'שווה לבחון את שתי האפשרויות';
+        sub = 'לפי התשובות, המצב שלכם פתוח לשני הכיוונים. כדאי לפנות למספר ספקים ולהשוות הצעות בהתחשב בתנאי השטח.';
+      } else if (diff > 0) {
+        badge = '<span class="wizard-result-badge yaviyl">🏠 ההמלצה: ממד יביל</span>';
+        title = 'ממ"ד יביל מתאים לכם יותר';
+        sub = 'לפי התשובות שלכם, ממד יביל הוא הבחירה היעילה: מהיר יותר, חסכוני יותר, ומתאים לתנאי השטח.';
+      } else {
+        badge = '<span class="wizard-result-badge binui">🏗️ ההמלצה: ממד בנייה</span>';
+        title = 'ממ"ד בנייה מתאים לכם יותר';
+        sub = 'לפי התשובות שלכם, ממד בנייה הוא הבחירה הנכונה: השקעה לטווח ארוך, חלק אינטגרלי מהבית, וללא תלות בהוראת השעה.';
+      }
+
+      const html =
+        '<div class="wizard-result-card">' +
+          badge +
+          '<div class="wizard-result-title">' + title + '</div>' +
+          '<div class="wizard-result-sub">' + sub + '</div>' +
+          '<div class="wizard-score-bars">' +
+            '<div class="wizard-score-row">' +
+              '<div class="wizard-score-label">🏠 יביל</div>' +
+              '<div class="wizard-score-bar"><div class="wizard-score-fill yaviyl" style="width:' + yPct + '%">' + yPct + '%</div></div>' +
+            '</div>' +
+            '<div class="wizard-score-row">' +
+              '<div class="wizard-score-label">🏗️ בנייה</div>' +
+              '<div class="wizard-score-bar"><div class="wizard-score-fill binui" style="width:' + bPct + '%">' + bPct + '%</div></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="wizard-reasons">' +
+            '<div class="wizard-reasons-title">📝 התשובות שלכם:</div>' +
+            '<ul>' + considerations.join('') + '</ul>' +
+          '</div>' +
+          '<div class="wizard-result-actions">' +
+            '<a class="primary" href="#sec-prices">📊 פירוט מחירים</a>' +
+            '<button onclick="startWizard()">🔄 התחילו מחדש</button>' +
+          '</div>' +
+        '</div>';
+
+      document.getElementById('wizard-result').innerHTML = html;
+      document.getElementById('wizard-questions').style.display = 'none';
+      document.getElementById('wizard-result').style.display = 'block';
+    }
 
     /* ============================================================
        PRICE TABS
