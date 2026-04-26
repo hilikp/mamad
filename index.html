@@ -1261,9 +1261,9 @@
       <span class="nav-title">🛡️ ממדים מכבים-רעות</span>
       <div class="nav-links">
         <a href="#sec-status">שלב התהליך</a>
-<a href="#sec-budget">תקציב</a>
-        <a href="#sec-prices">מחירים</a>
         <a href="#sec-wizard">אשף החלטה</a>
+        <a href="#sec-prices">מחירים</a>
+        <a href="#sec-budget">תקציב</a>
         <a href="#sec-families">סקר דגמים</a>
         <a href="#sec-oref">פיקוד העורף</a>
         <a href="#sec-license">רישוי</a>
@@ -1319,6 +1319,34 @@
           <span class="step-label">בחירה<br>וחתימה</span>
         </div>
       </div>
+    </div>
+
+    <!-- DECISION WIZARD -->
+    <div class="card" id="sec-wizard">
+      <h2>🤔 אשף החלטה - יביל או בנייה?</h2>
+
+      <!-- INTRO -->
+      <div id="wizard-intro">
+        <p>לא בטוחים איזה ממד מתאים לכם? ענו על כמה שאלות קצרות וקבלו המלצה מותאמת אישית בהתאם לתנאים אצלכם בבית - גישה, תקציב, אופק זמן ועוד.</p>
+        <button class="wizard-start-btn" onclick="startWizard()">התחלת אשף ←</button>
+      </div>
+
+      <!-- QUESTIONS -->
+      <div id="wizard-questions" style="display:none;">
+        <div class="wizard-progress">
+          <span>שאלה <span id="wq-num">1</span> מתוך <span id="wq-total">6</span></span>
+          <div class="wizard-progress-bar"><div class="wizard-progress-fill" id="wq-fill" style="width:17%"></div></div>
+          <span id="wq-pct">17%</span>
+        </div>
+        <div id="wq-content"></div>
+        <div class="wizard-nav">
+          <button class="secondary" id="wq-back" onclick="wizardBack()">← חזרה</button>
+          <button class="primary" id="wq-next" onclick="wizardNext()" disabled>המשך ←</button>
+        </div>
+      </div>
+
+      <!-- RESULT -->
+      <div id="wizard-result" style="display:none;"></div>
     </div>
 
     <!-- PRICES SECTION -->
@@ -1491,34 +1519,6 @@
 
       </div>
 
-    </div>
-
-    <!-- DECISION WIZARD -->
-    <div class="card" id="sec-wizard">
-      <h2>🤔 אשף החלטה - יביל או בנייה?</h2>
-
-      <!-- INTRO -->
-      <div id="wizard-intro">
-        <p>לא בטוחים איזה ממד מתאים לכם? ענו על 5 שאלות קצרות וקבלו המלצה מותאמת אישית בהתאם לתנאים אצלכם בבית - גישה, תקציב, אופק זמן ועוד.</p>
-        <button class="wizard-start-btn" onclick="startWizard()">התחלת אשף ←</button>
-      </div>
-
-      <!-- QUESTIONS -->
-      <div id="wizard-questions" style="display:none;">
-        <div class="wizard-progress">
-          <span>שאלה <span id="wq-num">1</span> מתוך 5</span>
-          <div class="wizard-progress-bar"><div class="wizard-progress-fill" id="wq-fill" style="width:20%"></div></div>
-          <span id="wq-pct">20%</span>
-        </div>
-        <div id="wq-content"></div>
-        <div class="wizard-nav">
-          <button class="secondary" id="wq-back" onclick="wizardBack()">← חזרה</button>
-          <button class="primary" id="wq-next" onclick="wizardNext()" disabled>המשך ←</button>
-        </div>
-      </div>
-
-      <!-- RESULT -->
-      <div id="wizard-result" style="display:none;"></div>
     </div>
 
     <!-- BUDGET CALCULATOR -->
@@ -1857,7 +1857,8 @@
         options: [
           { label: 'עד 5 מטר', sub: 'גישה מצוינת - מנוף סטנדרטי מספיק', icon: '🚛', y: 3, b: 0 },
           { label: '5 עד 7 מטר', sub: 'גישה בינונית - דורש מנוף בינוני', icon: '🚐', y: 1, b: 1 },
-          { label: 'מעל 7 מטר', sub: 'בעייתי - דורש מנוף מיוחד עם תוספת עלות משמעותית (אלפי ש"ח)', icon: '🚧', y: 0, b: 3 }
+          { label: 'מעל 7 מטר', sub: 'בעייתי - דורש מנוף מיוחד עם תוספת עלות משמעותית (אלפי ש"ח)', icon: '🚧', y: 0, b: 3 },
+          { label: 'יש גדר - רק גישה', sub: 'גדר חיה או קבועה קרוב למקום ההצבה - לבניית ממ"ד נדרש פתח של כ-1.5 מ\' להכנסת ציוד', icon: '🌿', y: 0, b: 2 }
         ]
       },
       {
@@ -1905,6 +1906,7 @@
       const pct = Math.round((num / total) * 100);
 
       document.getElementById('wq-num').textContent = num;
+      document.getElementById('wq-total').textContent = total;
       document.getElementById('wq-fill').style.width = pct + '%';
       document.getElementById('wq-pct').textContent = pct + '%';
 
@@ -1985,8 +1987,9 @@
       wizardState.answers.forEach(function(ansIdx, qIdx) {
         const q = WIZARD_QUESTIONS[qIdx];
         const opt = q.options[ansIdx];
-        yaviyl += opt.y;
-        binui += opt.b;
+        const weight = qIdx === 3 ? 1.3 : 1.0; // שאלה 4 (גורם אחד) מקבלת משקל של 30% נוסף
+        yaviyl += opt.y * weight;
+        binui += opt.b * weight;
         considerations.push('<li>' + q.title + ': <strong>' + opt.label + '</strong></li>');
       });
 
