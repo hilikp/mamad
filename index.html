@@ -1862,6 +1862,24 @@
         ]
       },
       {
+        title: 'מכשולים מעל אזור ההצבה',
+        desc: 'המנוף שמניח את הממד היביל צריך מרחב פתוח לחלוטין מעל. כבלי חשמל או עצים בוגרים יכולים למנוע פיזית את ההצבה.',
+        options: [
+          { label: 'פתוח לשמיים', sub: 'אין מכשולים מעל - מנוף יכול לעבוד בחופשיות', icon: '☀️', y: 3, b: 0 },
+          { label: 'מכשולים ניתנים להזזה', sub: 'גגון קל, צמחייה נמוכה - ניתן לפנות לפני ההצבה', icon: '🌳', y: 1, b: 1 },
+          { label: 'מכשולים קבועים', sub: 'כבלי חשמל או עץ בוגר מעל האזור - לא ניתן להסיר', icon: '⚡', y: 0, b: 0, earlyExitBinui: true }
+        ]
+      },
+      {
+        title: 'מצב הקרקע ושיפוע החצר',
+        desc: 'ביסוס לממד יביל מושפע מאוד ממצב הקרקע. קרקע בעייתית יכולה להוסיף 30,000-80,000 ₪ לביסוס בנפרד. ממד בנייה כולל את כל עלויות הקרקע במחיר אחד.',
+        options: [
+          { label: 'שטוחה ויציבה', sub: 'קרקע אחידה ללא שיפוע, ללא סלעים או עצים גדולים בסביבה', icon: '✅', y: 3, b: 0 },
+          { label: 'שיפוע קל', sub: 'יש שיפוע קל - ייתכן תוספת עלות ביסוס', icon: '📐', y: 1, b: 1 },
+          { label: 'שיפוע גדול / קרקע בעייתית', sub: 'סלע, שורשי עצים, שיפוע חד - ביסוס יקר מאוד', icon: '⛰️', y: 0, b: 3 }
+        ]
+      },
+      {
         title: 'גורם אחד מקצה לקצה',
         desc: 'בבניית ממד באתר עצמו ספק אחד מטפל בכל - מתכנון ועד גמר. בממד יביל לרוב נדרשים מספר ספקים: עורך בקשה, יצרן הממד, וקבלן ביסוס.',
         options: [
@@ -1952,6 +1970,10 @@
         showWizardEarlyExit();
         return;
       }
+      if (opt && opt.earlyExitBinui) {
+        showWizardEarlyExitBinui();
+        return;
+      }
       if (wizardState.current < WIZARD_QUESTIONS.length - 1) {
         wizardState.current++;
         renderWizardQuestion();
@@ -1980,6 +2002,26 @@
       document.getElementById('wizard-result').style.display = 'block';
     }
 
+    function showWizardEarlyExitBinui() {
+      const html =
+        '<div class="wizard-result-card">' +
+          '<span class="wizard-result-badge binui">🏗️ ממד יביל כנראה אינו אפשרי</span>' +
+          '<div class="wizard-result-title">מכשולים קבועים מעל אזור ההצבה</div>' +
+          '<div class="wizard-result-sub">' +
+            'כבלי חשמל או עץ בוגר מעל האזור המיועד מונעים פיזית מהמנוף לפעול. ' +
+            'ממד יביל דורש מרחב פתוח לחלוטין מעל - ללא פתרון לכך, ממד יביל אינו אפשרי. ' +
+            '<strong>יש לשקול ממד בנייה בלבד</strong>, שאינו דורש מנוף ומתאים לגישה מוגבלת.' +
+          '</div>' +
+          '<div class="wizard-result-actions">' +
+            '<a class="primary" href="#sec-prices">🏗️ ממד בנייה - פרטים ומחירים</a>' +
+            '<button onclick="startWizard()">🔄 התחילו מחדש</button>' +
+          '</div>' +
+        '</div>';
+      document.getElementById('wizard-result').innerHTML = html;
+      document.getElementById('wizard-questions').style.display = 'none';
+      document.getElementById('wizard-result').style.display = 'block';
+    }
+
     function showWizardResult() {
       let yaviyl = 0, binui = 0;
       const considerations = [];
@@ -1987,7 +2029,7 @@
       wizardState.answers.forEach(function(ansIdx, qIdx) {
         const q = WIZARD_QUESTIONS[qIdx];
         const opt = q.options[ansIdx];
-        const weight = (qIdx === 3 || qIdx === 5) ? 1.3 : 1.0; // שאלות 4 ו-6 מקבלות משקל של 30% נוסף
+        const weight = qIdx === 4 ? 1.4 : (qIdx === 5 || qIdx === 7) ? 1.3 : 1.0; // קרקע (4)=140%, ספק יחיד (5) וצורה (7)=130%
         yaviyl += opt.y * weight;
         binui += opt.b * weight;
         considerations.push('<li>' + q.title + ': <strong>' + opt.label + '</strong></li>');
