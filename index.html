@@ -1852,6 +1852,14 @@
         ]
       },
       {
+        title: 'מרחק מגבול המגרש',
+        desc: 'על פי תקנות הבנייה נדרש מרחק מינימלי של לפחות מטר אחד בין קצה הממד לגבול המגרש השכן.',
+        options: [
+          { label: 'כן', sub: 'יש לפחות מטר פנוי בין מיקום הממד לגבול המגרש', icon: '✅', y: 1, b: 1 },
+          { label: 'לא', sub: 'אין מרחק מספיק מגבול המגרש - נדרשת בדיקה נפרדת', icon: '❌', y: 0, b: 0, earlyExit: true }
+        ]
+      },
+      {
         title: 'מרחק אזור ההצבה מהכביש הקרוב',
         desc: 'התקנת ממד יביל מחייבת מנוף שיניח את היחידה במקומה. ככל שהמרחק מהכביש גדל - נדרש מנוף גדול יותר ויקר יותר.',
         options: [
@@ -2030,10 +2038,10 @@
         const q = WIZARD_QUESTIONS[qIdx];
         const opt = q.options[ansIdx];
         let weight = 1.0;
-        if (qIdx === 4) weight = 1.4;                        // קרקע - 140%
-        else if (qIdx === 5 && ansIdx === 0) weight = 2.2;   // מעדיף גורם אחד - 220%
-        else if (qIdx === 5) weight = 1.3;                   // לא מטריד - 130%
-        else if (qIdx === 7) weight = 1.3;                   // צורה ייחודית - 130%
+        if (qIdx === 5) weight = 1.4;                        // קרקע - 140%
+        else if (qIdx === 6 && ansIdx === 0) weight = 2.2;   // מעדיף גורם אחד - 220%
+        else if (qIdx === 6) weight = 1.3;                   // לא מטריד - 130%
+        else if (qIdx === 8) weight = 1.3;                   // צורה ייחודית - 130%
         yaviyl += opt.y * weight;
         binui += opt.b * weight;
         considerations.push('<li>' + q.title + ': <strong>' + opt.label + '</strong></li>');
