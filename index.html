@@ -2029,7 +2029,11 @@
       wizardState.answers.forEach(function(ansIdx, qIdx) {
         const q = WIZARD_QUESTIONS[qIdx];
         const opt = q.options[ansIdx];
-        const weight = qIdx === 4 ? 1.4 : (qIdx === 5 || qIdx === 7) ? 1.3 : 1.0; // קרקע (4)=140%, ספק יחיד (5) וצורה (7)=130%
+        let weight = 1.0;
+        if (qIdx === 4) weight = 1.4;                        // קרקע - 140%
+        else if (qIdx === 5 && ansIdx === 0) weight = 1.6;   // מעדיף גורם אחד - 160%
+        else if (qIdx === 5) weight = 1.3;                   // לא מטריד - 130%
+        else if (qIdx === 7) weight = 1.3;                   // צורה ייחודית - 130%
         yaviyl += opt.y * weight;
         binui += opt.b * weight;
         considerations.push('<li>' + q.title + ': <strong>' + opt.label + '</strong></li>');
