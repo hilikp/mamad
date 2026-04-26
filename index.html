@@ -1987,7 +1987,7 @@
       wizardState.answers.forEach(function(ansIdx, qIdx) {
         const q = WIZARD_QUESTIONS[qIdx];
         const opt = q.options[ansIdx];
-        const weight = qIdx === 3 ? 1.3 : 1.0; // שאלה 4 (גורם אחד) מקבלת משקל של 30% נוסף
+        const weight = (qIdx === 3 || qIdx === 5) ? 1.3 : 1.0; // שאלות 4 ו-6 מקבלות משקל של 30% נוסף
         yaviyl += opt.y * weight;
         binui += opt.b * weight;
         considerations.push('<li>' + q.title + ': <strong>' + opt.label + '</strong></li>');
