@@ -1844,6 +1844,14 @@
         ]
       },
       {
+        title: 'שטח פנוי בחצר',
+        desc: 'הצבת ממד יביל או בניית ממד דורשות שטח פנוי בסיסי בחצר. ללא שטח מספיק יש לבחון פתרונות חלופיים.',
+        options: [
+          { label: 'כן', sub: 'יש לפחות 7 מ"ר פנויים בחצר להצבה/בנייה', icon: '✅', y: 1, b: 1 },
+          { label: 'לא', sub: 'אין שטח פנוי מספיק - נדרשת בדיקה נפרדת', icon: '❌', y: 0, b: 0, earlyExit: true }
+        ]
+      },
+      {
         title: 'מרחק אזור ההצבה מהכביש הקרוב',
         desc: 'התקנת ממד יביל מחייבת מנוף שיניח את היחידה במקומה. ככל שהמרחק מהכביש גדל - נדרש מנוף גדול יותר ויקר יותר.',
         options: [
@@ -1936,12 +1944,38 @@
     }
 
     function wizardNext() {
+      const q = WIZARD_QUESTIONS[wizardState.current];
+      const opt = q.options[wizardState.answers[wizardState.current]];
+      if (opt && opt.earlyExit) {
+        showWizardEarlyExit();
+        return;
+      }
       if (wizardState.current < WIZARD_QUESTIONS.length - 1) {
         wizardState.current++;
         renderWizardQuestion();
       } else {
         showWizardResult();
       }
+    }
+
+    function showWizardEarlyExit() {
+      const html =
+        '<div class="wizard-result-card">' +
+          '<span class="wizard-result-badge both">⚠️ נדרשת בדיקה נפרדת</span>' +
+          '<div class="wizard-result-title">אין שטח פנוי מספיק בחצר</div>' +
+          '<div class="wizard-result-sub">' +
+            'הצבת ממד יביל או בניית ממד דורשות שטח פנוי של לפחות 7 מ"ר. ' +
+            'יש לבחון בנפרד האם בכלל ניתן להציב ממד יביל קטן יותר במגרש שלכם, ' +
+            'או לבדוק חלופות בנייה מול בעל מקצוע מוסמך (אדריכל / מהנדס בניין).' +
+          '</div>' +
+          '<div class="wizard-result-actions">' +
+            '<a class="primary" href="#sec-license">📝 פרטי הליך הרישוי</a>' +
+            '<button onclick="startWizard()">🔄 התחילו מחדש</button>' +
+          '</div>' +
+        '</div>';
+      document.getElementById('wizard-result').innerHTML = html;
+      document.getElementById('wizard-questions').style.display = 'none';
+      document.getElementById('wizard-result').style.display = 'block';
     }
 
     function showWizardResult() {
