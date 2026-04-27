@@ -1886,6 +1886,17 @@
 
   </div><!-- /main-content -->
 
+  <!-- HIDDEN FORM FOR GOOGLE FORMS SUBMISSION -->
+  <iframe name="decision-iframe" style="display:none;"></iframe>
+  <form id="decision-hidden-form"
+        action="https://docs.google.com/forms/d/e/1FAIpQLSfX2fcsuxZM7sx5ulNVUr5az8EYAcISUq-L7-3TUkMuskNKVw/formResponse"
+        method="POST" target="decision-iframe" style="display:none;">
+    <input type="hidden" name="entry.1376122120" id="hf-phone">
+    <input type="hidden" name="entry.1514104250" id="hf-name">
+    <input type="hidden" name="entry.1358463313" id="hf-hood">
+    <input type="hidden" name="entry.604015013"  id="hf-choice">
+  </form>
+
   <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="חזרה לראש הדף">↑</button>
 
   <script>
@@ -2196,22 +2207,14 @@
       }
       errEl.style.display = 'none';
 
-      var formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfX2fcsuxZM7sx5ulNVUr5az8EYAcISUq-L7-3TUkMuskNKVw/formResponse';
-      var data = new URLSearchParams();
-      data.append('entry.1376122120', phone);
-      data.append('entry.1514104250', name);
-      data.append('entry.1358463313', hood);
-      data.append('entry.604015013',  choice);
+      document.getElementById('hf-phone').value  = phone;
+      document.getElementById('hf-name').value   = name;
+      document.getElementById('hf-hood').value   = hood;
+      document.getElementById('hf-choice').value = choice;
+      document.getElementById('decision-hidden-form').submit();
 
-      fetch(formUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: data.toString() })
-        .then(function() {
-          localStorage.setItem('mamad_decision_submitted', '1');
-          showDecisionSuccess();
-        })
-        .catch(function() {
-          errEl.textContent = '⚠️ שגיאה בשליחה - נסו שוב מאוחר יותר.';
-          errEl.style.display = 'block';
-        });
+      localStorage.setItem('mamad_decision_submitted', '1');
+      showDecisionSuccess();
     }
 
     function showDecisionSuccess() {
