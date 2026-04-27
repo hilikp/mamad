@@ -2154,47 +2154,6 @@
     /* ============================================================
        PRICE TABS
     ============================================================ */
-    /* ============================================================
-       DECISION FORM SUBMIT
-    ============================================================ */
-    function submitDecision() {
-      var phone  = document.getElementById('df-phone').value.trim();
-      var name   = document.getElementById('df-name').value.trim();
-      var hood   = document.getElementById('df-hood').value;
-      var choice = document.getElementById('df-choice').value;
-      var errEl  = document.getElementById('decision-error');
-
-      if (!phone || !name || !hood || !choice) {
-        errEl.style.display = 'block';
-        return;
-      }
-      errEl.style.display = 'none';
-
-      var fbzx = Math.floor(Math.random() * 9e18).toString();
-      document.getElementById('hf-phone').value   = phone;
-      document.getElementById('hf-name').value    = name;
-      document.getElementById('hf-hood').value    = hood;
-      document.getElementById('hf-choice').value  = choice;
-      document.getElementById('hf-fbzx').value    = fbzx;
-      document.getElementById('hf-partial').value = '[null,null,"' + fbzx + '"]';
-      document.getElementById('decision-hidden-form').submit();
-
-      localStorage.setItem('mamad_decision_submitted', '1');
-      showDecisionSuccess();
-    }
-
-    function showDecisionSuccess() {
-      document.getElementById('decision-form-fields').style.display = 'none';
-      document.getElementById('decision-success').style.display = 'block';
-    }
-
-    // בדיקה בטעינה - אם כבר נרשם, מציג מסך תודה ישירות
-    (function() {
-      if (localStorage.getItem('mamad_decision_submitted')) {
-        document.addEventListener('DOMContentLoaded', showDecisionSuccess);
-      }
-    })();
-
     function switchPriceTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(function(t) {
         t.style.display = 'none';
