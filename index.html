@@ -1396,6 +1396,10 @@
       <div id="decision-form-area">
         <div class="decision-form" id="decision-form-fields">
           <div class="decision-row">
+            <label class="decision-label" for="df-phone">מספר טלפון או מייל *</label>
+            <input type="text" id="df-phone" class="decision-input" placeholder="לדוגמה: 050-1234567" />
+          </div>
+          <div class="decision-row">
             <label class="decision-label" for="df-name">שם פרטי ומשפחה *</label>
             <input type="text" id="df-name" class="decision-input" placeholder="לדוגמה: ישראל ישראלי" />
           </div>
@@ -2180,22 +2184,24 @@
        DECISION FORM SUBMIT
     ============================================================ */
     function submitDecision() {
+      var phone  = document.getElementById('df-phone').value.trim();
       var name   = document.getElementById('df-name').value.trim();
       var hood   = document.getElementById('df-hood').value;
       var choice = document.getElementById('df-choice').value;
       var errEl  = document.getElementById('decision-error');
 
-      if (!name || !hood || !choice) {
+      if (!phone || !name || !hood || !choice) {
         errEl.style.display = 'block';
         return;
       }
       errEl.style.display = 'none';
 
-      var formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSedQZ3FdhBqUb8JFiGS2_k4MvILMn010Nb8O6gPryrdeJbrqw/formResponse';
+      var formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfX2fcsuxZM7sx5ulNVUr5az8EYAcISUq-L7-3TUkMuskNKVw/formResponse';
       var data = new URLSearchParams();
-      data.append('entry.692530140',  name);
-      data.append('entry.1626602819', hood);
-      data.append('entry.1586257168', choice);
+      data.append('entry.1376122120', phone);
+      data.append('entry.1514104250', name);
+      data.append('entry.1358463313', hood);
+      data.append('entry.604015013',  choice);
 
       fetch(formUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: data.toString() })
         .then(function() {
