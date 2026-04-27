@@ -1895,6 +1895,11 @@
     <input type="hidden" name="entry.1514104250" id="hf-name">
     <input type="hidden" name="entry.1358463313" id="hf-hood">
     <input type="hidden" name="entry.604015013"  id="hf-choice">
+    <input type="hidden" name="fvv" value="1">
+    <input type="hidden" name="pageHistory" value="0">
+    <input type="hidden" name="submissionTimestamp" value="-1">
+    <input type="hidden" name="fbzx" id="hf-fbzx">
+    <input type="hidden" name="partialResponse" id="hf-partial">
   </form>
 
   <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="חזרה לראש הדף">↑</button>
@@ -2207,10 +2212,13 @@
       }
       errEl.style.display = 'none';
 
-      document.getElementById('hf-phone').value  = phone;
-      document.getElementById('hf-name').value   = name;
-      document.getElementById('hf-hood').value   = hood;
-      document.getElementById('hf-choice').value = choice;
+      var fbzx = Math.floor(Math.random() * 9e18).toString();
+      document.getElementById('hf-phone').value   = phone;
+      document.getElementById('hf-name').value    = name;
+      document.getElementById('hf-hood').value    = hood;
+      document.getElementById('hf-choice').value  = choice;
+      document.getElementById('hf-fbzx').value    = fbzx;
+      document.getElementById('hf-partial').value = '[null,null,"' + fbzx + '"]';
       document.getElementById('decision-hidden-form').submit();
 
       localStorage.setItem('mamad_decision_submitted', '1');
