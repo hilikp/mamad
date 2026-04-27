@@ -2199,14 +2199,26 @@
 
       fetch(formUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: data.toString() })
         .then(function() {
-          document.getElementById('decision-form-fields').style.display = 'none';
-          document.getElementById('decision-success').style.display = 'block';
+          localStorage.setItem('mamad_decision_submitted', '1');
+          showDecisionSuccess();
         })
         .catch(function() {
           errEl.textContent = '⚠️ שגיאה בשליחה - נסו שוב מאוחר יותר.';
           errEl.style.display = 'block';
         });
     }
+
+    function showDecisionSuccess() {
+      document.getElementById('decision-form-fields').style.display = 'none';
+      document.getElementById('decision-success').style.display = 'block';
+    }
+
+    // בדיקה בטעינה - אם כבר נרשם, מציג מסך תודה ישירות
+    (function() {
+      if (localStorage.getItem('mamad_decision_submitted')) {
+        document.addEventListener('DOMContentLoaded', showDecisionSuccess);
+      }
+    })();
 
     function switchPriceTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(function(t) {
