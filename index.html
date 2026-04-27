@@ -1249,6 +1249,44 @@
     .wizard-result-actions a.primary:hover { background: #061f54; }
     .wizard-result-actions button:hover { background: #f0f4fa; }
 
+    /* ============================================================
+       DECISION FORM
+    ============================================================ */
+    .decision-form { display: flex; flex-direction: column; gap: 20px; max-width: 480px; }
+    .decision-row { display: flex; flex-direction: column; gap: 7px; }
+    .decision-label { font-size: 0.97rem; font-weight: 700; color: #1a2340; }
+    .decision-input, .decision-select {
+      padding: 12px 14px;
+      border: 2px solid #c5d5ea;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: 'Heebo', Arial, sans-serif;
+      direction: rtl;
+      outline: none;
+      transition: border-color 0.2s;
+      background: #fff;
+      color: #1a2340;
+      width: 100%;
+    }
+    .decision-input:focus, .decision-select:focus { border-color: #1a5fa8; }
+    .decision-success {
+      background: #e8f5e9;
+      border: 2px solid #66bb6a;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      font-size: 1.1rem;
+      color: #2e7d32;
+      font-weight: 700;
+    }
+    .decision-error {
+      color: #c62828;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 10px 14px;
+      background: #fdecea;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
@@ -1262,6 +1300,7 @@
       <div class="nav-links">
         <a href="#sec-status">שלב התהליך</a>
         <a href="#sec-wizard">אשף החלטה</a>
+        <a href="#sec-decision">ההחלטה שלי</a>
         <a href="#sec-prices">מחירים</a>
         <a href="#sec-budget">תקציב</a>
         <a href="#sec-families">סקר דגמים</a>
@@ -1347,6 +1386,42 @@
 
       <!-- RESULT -->
       <div id="wizard-result" style="display:none;"></div>
+    </div>
+
+    <!-- DECISION FORM -->
+    <div class="card" id="sec-decision">
+      <h2>📋 רשמו את ההחלטה שלכם</h2>
+      <p class="budget-note">החלטתם? רשמו כאן את בחירתכם הסופית - המידע יסייע לתכנון הצעד הבא של הקבוצה.</p>
+
+      <div id="decision-form-area">
+        <div class="decision-form" id="decision-form-fields">
+          <div class="decision-row">
+            <label class="decision-label" for="df-name">שם פרטי ומשפחה *</label>
+            <input type="text" id="df-name" class="decision-input" placeholder="לדוגמה: ישראל ישראלי" />
+          </div>
+          <div class="decision-row">
+            <label class="decision-label" for="df-hood">שכונה *</label>
+            <select id="df-hood" class="decision-select">
+              <option value="">-- בחרו שכונה --</option>
+              <option value="מכבים">מכבים</option>
+              <option value="רעות">רעות</option>
+            </select>
+          </div>
+          <div class="decision-row">
+            <label class="decision-label" for="df-choice">ההחלטה שלכם *</label>
+            <select id="df-choice" class="decision-select">
+              <option value="">-- בחרו סוג ממד --</option>
+              <option value='ממ"ד יביל (5, 9, 12 לא קריטי בשלב זה)'>ממ"ד יביל</option>
+              <option value='ממ"ד בבניה מסודרת במקום'>ממ"ד בנייה במקום</option>
+            </select>
+          </div>
+          <div id="decision-error" style="display:none;" class="decision-error">⚠️ אנא מלאו את כל השדות לפני השליחה.</div>
+          <button class="primary" onclick="submitDecision()" style="align-self:flex-start;">שליחה ✓</button>
+        </div>
+        <div id="decision-success" style="display:none;" class="decision-success">
+          ✅ תודה! הבחירה שלכם נרשמה בהצלחה.
+        </div>
+      </div>
     </div>
 
     <!-- PRICES SECTION -->
@@ -2101,6 +2176,38 @@
     /* ============================================================
        PRICE TABS
     ============================================================ */
+    /* ============================================================
+       DECISION FORM SUBMIT
+    ============================================================ */
+    function submitDecision() {
+      var name   = document.getElementById('df-name').value.trim();
+      var hood   = document.getElementById('df-hood').value;
+      var choice = document.getElementById('df-choice').value;
+      var errEl  = document.getElementById('decision-error');
+
+      if (!name || !hood || !choice) {
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+
+      var formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSedQZ3FdhBqUb8JFiGS2_k4MvILMn010Nb8O6gPryrdeJbrqw/formResponse';
+      var data = new URLSearchParams();
+      data.append('entry.692530140',  name);
+      data.append('entry.1626602819', hood);
+      data.append('entry.1586257168', choice);
+
+      fetch(formUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: data.toString() })
+        .then(function() {
+          document.getElementById('decision-form-fields').style.display = 'none';
+          document.getElementById('decision-success').style.display = 'block';
+        })
+        .catch(function() {
+          errEl.textContent = '⚠️ שגיאה בשליחה - נסו שוב מאוחר יותר.';
+          errEl.style.display = 'block';
+        });
+    }
+
     function switchPriceTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(function(t) {
         t.style.display = 'none';
